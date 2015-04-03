@@ -1,0 +1,20 @@
+<h2> New Map </h2>
+<form name='newMap' novalidate class='form-horizontal'>
+
+	<!-- 
+	form-field is a directive that we are adding.  This directive is defined in directives.js.
+		making live=false make sure that thiese field is not live (unlike search field which gets executing when user is typing)
+	     this will wait for user to finish typing and then update
+	     -->
+	<form-field record='report' field='firstName' live='false' required='true'></form-field>
+	<form-field record='report' field='lastName' live='false' required='true'></form-field>
+
+	<form-field ng-repeat='(k,v) in report | keyFilter : "firstName" | keyFilter : "lastName"' record='report' field='{{k}}'></form-field>
+
+
+	<div class='row form-group'>
+		<div class='col-sm-offset-2'>
+			<button class='btn btn-primary' ng-click='save()'> Create Map </button>
+		</div>
+	</div>
+</form>

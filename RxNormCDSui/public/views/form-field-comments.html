@@ -1,0 +1,42 @@
+
+<!-- SOMEHOW THIS FILE SAME AS form-field.html, but will not work these comments -->
+<!-- Define a template for form field (e.g. firstName, lastName,...) -->
+<!-- Here {{field}} comes from "field" attribute of directive 'form-field' as used in create.html and defined in directives.js. -->
+<!-- We use ng-form becasue we have to treate this directive as a form, so that it can validate itself. when this directive validates -->
+<!-- iself and hence the validation will get propogated to the form in which it is used. -->
+<!-- ng-class will be set to has-error to show if the dirty flag is set or not (based on if user has finished typing the value or not) -->
+<!-- invalid will tell is the value is valid or not based on validation condition -->
+<!-- ng-if shows * if a field is a required field -->
+<!-- ng-switch is like switch statement in programming language - here we use it for required (true/flase). -->
+<!-- We want to show both cases where field is required or not. -->
+<!-- when required -->
+<!-- we would like to update when the value is changed or focus is lost. sometime user might change it but stay in that field. -->
+<!-- it will not update till the value is changed. since live=false in create.html's form. -->
+
+<div class='row form-group' ng-form="{{field}}" ng-class="{'has-error' : {{field}}.$dirty && {{field}}.$invalid }" >
+	<label class='col-sm-2 control-label'> {{ field | labelCase }} <span ng-if='required'>*</span></label>
+	<div class='col-sm-6' ng-switch='required'>
+		<input ng-switch-when='true' ng-model='record[field][0]' type='{{record[field][1]}}' class='form-control'
+		required ng-change='update()' ng-blur='blurUpdate()' />
+
+		<div class='input-group' ng-switch-default>
+			<input ng-model='record[field][0]' type='{{record[field][1]}}' class='form-control'
+		 ng-change='update()' ng-blur='blurUpdate()' />
+		 <span class='input-group-btn'>
+		 	<button class='btn btn-default' ng-click='remove(field)'>
+		 		<span class='glyphicon glyphicon-remove-circle'></span>
+		 	</button>
+		 </span>
+		</div>
+	</div>
+
+	<div class='col-sm-4 has-error' ng-show='{{field}}.$dirty && {{field}}.$invalid' ng-messages='{{field}}.$error'>
+		<!-- here we can list message for all cases -->
+		<p class='control-label' ng-message='required'>{{field | labelCase}} is required.</p>
+		<!-- fieldTypes comes from directives.js where keys and values are types of the filed and corresponding messages if input is not correct -->
+		<!-- types is set in $scope variable, as defined in 'link:' in the file directives.js -->
+		<p class='control-label' ng-repeat='(k, v) in types' ng-message='{{k}}'>{{field|labelCase}} {{v[1]}}</p>
+	</div>
+</div>
+
+
