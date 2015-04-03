@@ -1,4 +1,8 @@
 angular.module('RxNormReport')
+.controller('RxNormReview', function ($scope) {
+	$scope.mainReviewers = ['Kelly A', 'Robert B', 'Anne C'];
+	$scope.guestReviewers = ['Guest Reviewer'];
+})
 .controller('RxNormList', function ($scope, MyList, $location) {
 	$scope.list1 = MyList.query();
 	$scope.fields = ['Tables_in_rxnormcds'];

@@ -1,0 +1,87 @@
+
+<form class="form-horizontal">
+<fieldset ng-controller="RxNormReview">
+
+<table class="table">
+<thead>
+    <tr>
+        <div class="control-group">
+    <label class="control-label" for="reviewers">Reviewer:</label>
+    <select id="reviewers" 
+            name="reviewers" 
+            class="dropdown-toggle" 
+            data-toggle="dropdown" 
+            ng-model="selection.reviewer"
+            onchange="changeReviewer()">
+    <option value="">Select Reviewer</option>
+    <option ng-repeat="mainrev in mainReviewers" 
+            value="{{mainrev}}">{{mainrev}}</option>
+    <option ng-repeat="guestrev in guestReviewers" 
+            value="{{guestrev}}">{{guestrev}}</option>
+    </select>
+    </div>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+    <td>
+        <fieldset ng-disabled="!selection.reviewer">
+            <table class="table">
+            <tr>
+                <td class="col-sm-8">
+                <div class="panel panel-success">
+                <div class="panel-heading">
+                <h3 class="panel-title">Exisitng</h3>
+                </div>
+            <div class="panel-body">
+                Existing content
+            </div>
+            </div>
+            </td>
+            <td class="col-sm-4" rowspan="2"> 
+                <div class="panel panel-warning">
+                <div class="panel-heading">
+                <h3 class="panel-title">Comment</h3>
+                </div>
+                <div class="panel-body">
+                Comment
+                </div>
+                </div>
+            </td>
+            </tr>
+            <tr>
+                <td class="col-sm-8">
+                <div class="panel panel-primary">
+                <div class="panel-heading">
+                <h3 class="panel-title">Proposed</h3>
+                </div>
+            <div class="panel-body">
+                Proposed content
+            </div>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td colspan="2">
+    <div class="control-group" >
+        <div class="controls" align="center">
+            <table class="table">
+            <tr>
+            <td class="col-sm-4"></td>
+            <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary">Previous</button></td>
+            <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success">All OK</button></td>
+            <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary">Next</button></td>
+            <td class="col-sm-4"></td>
+            </tr>
+        </div>
+    </div>
+            </td>
+            </tr>
+    </table>
+</fieldset>                
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</fieldset>
+</form>

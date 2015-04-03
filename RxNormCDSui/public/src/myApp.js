@@ -1,6 +1,10 @@
 angular.module('RxNormReport', ['ngRoute', 'ngResource', 'ngMessages'])
 .config(function ($routeProvider, $locationProvider) {	
 		$routeProvider
+		.when('/', {
+			controller: 'RxNormReview',
+			templateUrl: 'views/rxnormreview.html'
+		})
 		.when('/rxnormtable', {
 			controller: 'RxNormList',
 			templateUrl: 'views/rxnormlist.html'

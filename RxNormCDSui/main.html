@@ -1,20 +1,23 @@
 <html ng-app='RxNormReport'>
     <head>
-        <title>RxNorm CDS</title>
+        <title>RxNorm Review - Clinical Decision Support</title>
         <base href="/">
         <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="src/bootstrap.min.css" rel="stylesheet" type="text/css"> 
     </head>
     <body>
-        <div class='container'>
-            <div class='page-header'>
-                <h1>RxNorm Tables List</h1>
+        <div class="well well-sm navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <h3><a href="/">RxNorm Review</a></h3>
+                </div>
             </div>
-            <div class="row">
-                <div class='col-sm-12' ng-view></div>
-            </div>
-        </div>
-        <script src="lib/jquery/dist/jquery.min.js"></script>
+        </div>        
+        <div style="height:100px;" id="spacer"></div>
+    
+        <div class='col-sm-12' ng-view></div>
+
+        <script src="lib/jquery/dist/jquery.min.js"></script>        
         <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="lib/angular/angular.min.js"></script>
         <script src="lib/angular-route/angular-route.min.js"></script>
@@ -25,5 +28,6 @@
         <script src="src/factories.js"></script>
         <script src="src/filters.js"></script>
         <script src="src/directives.js"></script>
+        <script src="src/review.js"></script>
     </body>
 </html>
