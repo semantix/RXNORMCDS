@@ -28,13 +28,29 @@
         <fieldset ng-disabled="!selection.reviewer">
             <table class="table">
             <tr>
+                    <td><b>SCD:</b>&nbsp;&nbsp;{{currentDrug.scd}}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>RxCUI:</b>&nbsp;&nbsp;{{currentDrug.rxcui}}</td>
+                </tr>
+            <tr>
                 <td class="col-sm-8">
                 <div class="panel panel-success">
                 <div class="panel-heading">
                 <h3 class="panel-title">Exisitng</h3>
                 </div>
             <div class="panel-body">
-                Existing content
+                <table class="table">
+                <tr>
+                    <td><b>RxNDF:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxndf}}</td>
+                </tr>
+                <tr>
+                    <td><b>RxTndF:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxtndf}}</td>
+                </tr>
+                <tr>
+                    <td><b>RxTroute:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxtroute}}</td>
+                </tr>
+                </table>
             </div>
             </div>
             </td>
@@ -44,8 +60,32 @@
                 <h3 class="panel-title">Comment</h3>
                 </div>
                 <div class="panel-body">
-                Comment
-                </div>
+                <table>
+                <tr>
+                <td><h4>Reviewer:&nbsp;&nbsp;<b><span id="currentReviewer"></span></b></h4></td>
+                </tr> 
+                <tr>
+                <td><div class="control-group">
+                        <label class="control-label" for="reviewers">Please add comments for </label>
+                        <select id="selectedProperty" 
+                                name="selectedProperty" 
+                                class="dropdown-toggle" 
+                                data-toggle="dropdown" 
+                                ng-model="selection.property"
+                                onchange="changeSelectedProperty()">
+                        <option value="">Select a property to comment on</option>
+                        <option ng-repeat="prop in propertyList" 
+                                value="{{prop}}">{{prop}}</option>
+    
+                        </select>
+                    </div>
+                </td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                <td><textarea id="currentComment" class="form-control col-xs-12"></textarea></td>
+                </tr>
+                </table>
                 </div>
             </td>
             </tr>
@@ -56,7 +96,79 @@
                 <h3 class="panel-title">Proposed</h3>
                 </div>
             <div class="panel-body">
-                Proposed content
+                <table class="table">
+                <tr><td><h4><span class="label label-default">Dose Forms</span></h4></td></tr>
+                <tr>
+                    <td>
+                        <b>Drug Form:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfdrugform}}
+                        <span id="Dose Form: Drug Form" style ="color:blue" class='glyphicon glyphicon-stop' 
+                        onClick="setSelectedProperty('Dose Form: Drug Form')"></span>
+                        <span style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
+                    </td>
+                    <td>
+                    <b>Release Pattern:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfreleasepattern}}
+                        <span id="Dose Form: Release Pattern" style ="color:blue" class='glyphicon glyphicon-stop'
+                        onClick="setSelectedProperty('Dose Form: Release Pattern')"></span>
+                        <span style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <b>Delivery Form:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfdeliveryform}}
+                    <span id="Dose Form: Delivery Form" style ="color:blue" class='glyphicon glyphicon-stop'
+                    onClick="setSelectedProperty('Dose Form: Delivery Form')"></span>
+                    <span style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
+                    </td>
+                    <td>
+                    <b>ER Time:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfertime}}
+                    <span id="Dose Form: ER Time" style ="color:blue" class='glyphicon glyphicon-stop'
+                    onClick="setSelectedProperty('Dose Form: ER Time')"></span>
+                    <span style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
+                    </td>
+                </tr>
+                <tr><td><h4><span class="label label-default">Administration</span></h4></td></tr>
+                <tr>
+                    <td>
+                    <b>Route (site):</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().admroute}}
+                    <span id="Administration: Route" style ="color:blue" class='glyphicon glyphicon-stop'
+                    onClick="setSelectedProperty('Administration: Route')"></span>
+                    <span style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <b>Method:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().admmethod}}
+                    <span id="Administration: Method" style ="color:blue" class='glyphicon glyphicon-stop'
+                    onClick="setSelectedProperty('Administration: Method')"></span>
+                    <span style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
+                    </td>
+                </tr>
+                <tr><td><h4><span class="label label-default">Delivery Device</span></h4></td></tr>
+                <tr>
+                    <td>
+                    <b>Type:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddtype}}
+                    <span id="Delivery Device: Type" style ="color:blue" class='glyphicon glyphicon-stop'
+                    onClick="setSelectedProperty('Delivery Device: Type')"></span>
+                    <span style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
+                    </td>
+                    <td>
+                    <b>Capacity:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddcapacity}}
+                    <span id="Delivery Device: Capacity" style ="color:blue" class='glyphicon glyphicon-stop'
+                    onClick="setSelectedProperty('Delivery Device: Capacity')"></span>
+                    <span style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                    <b>ER Time:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddertime}}
+                    <span id="Delivery Device: ER Time" style ="color:blue" class='glyphicon glyphicon-stop'
+                    onClick="setSelectedProperty('Delivery Device: ER Time')"></span>
+                    <span style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
+                    </td>
+                </tr>
+                 </table>
+                </div>
             </div>
             </div>
             </td>
@@ -69,7 +181,7 @@
             <tr>
             <td class="col-sm-4"></td>
             <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary">Previous</button></td>
-            <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success">All OK</button></td>
+            <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success" onclick="setOK()">All OK</button></td>
             <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary">Next</button></td>
             <td class="col-sm-4"></td>
             </tr>
