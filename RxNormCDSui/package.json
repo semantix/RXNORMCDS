@@ -1,0 +1,22 @@
+{
+  "name": "RxNormCDSui",
+  "description": "RxNormCDSui: RxNorm Clinical Decision Support User Interface",
+  "version": "0.0.1",
+  "main": "server.js",
+  "contributors": [
+    {
+      "name": "Deepak Kumar Sharma",
+      "email": "sharma.deepak2@mayo.edu"
+    },
+    {
+      "name": "Robert Freimuth",
+      "email": "freimuth.robert@mayo.edu"
+    }
+  ],
+  "dependencies": {
+    "body-parser": "1.12.2",
+    "express": "4.12.3",
+    "express-myconnection": "1.0.4",
+    "mysql": "*"
+  }
+}

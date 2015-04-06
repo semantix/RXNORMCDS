@@ -8,4 +8,6 @@
 *.ipr
 *.iws
 *.bak
+node_modules/*
+public/lib/*
 .idea/
