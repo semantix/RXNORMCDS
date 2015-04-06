@@ -1,0 +1,5 @@
+.table-borderless td,
+.table-borderless tr,
+.table-borderless th {
+    border: 0;
+}

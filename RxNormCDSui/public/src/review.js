@@ -11,31 +11,58 @@ function changeReviewer()
 function changeSelectedProperty()
 {
 	selectedProperty = document.getElementById("selectedProperty").value;
+
+	if (selectedProperty == "")
+		document.getElementById("currentComment").disabled = true;
+	else
+		document.getElementById("currentComment").disabled = false;
+	
 	console.log("Property selected to comment:" + selectedProperty);
 }
 
 function setSelectedProperty(clickedProperty)
 {
 	document.getElementById("selectedProperty").value = clickedProperty;
+	document.getElementById("currentComment").disabled = false;
 }
 
 function setOK()
 {
-	var elems = document.getElementsByTagName("span");
+	for (i=0; i < 9; i++)
+	{
+		var elem = document.getElementById("TUP"+i);
+		var buttn = document.getElementById('okButton');
 
-	for (var i = 0; i<elems.length; i++) {
-
-		if (elems[i].class.name == ' glyphicon glyphicon-thumbs-up')
+		if (elem.style.visibility == "visible")
 		{
-        	if (elems[i].style.visibility == 'visible') {
-            	elems[i].style.visibility = 'hidden';    
-        	}
-        	else {
-            	elems[i].style.visibility = 'visible';
-        	}
-        }
+			buttn.classList.add('btn-success');
+			buttn.classList.remove('btn-warning');
+			buttn.innerHTML = "Review Done!";
+			elem.style.visibility = "hidden";
+		}
+		else
+		{
+			buttn.classList.remove('btn-success');
+			buttn.classList.add('btn-warning');
+			buttn.innerHTML = "Review Again";
+			elem.style.visibility = 'visible';
+		}
+	}
+}
 
-        //if (elems[i].style.color == 'blue')
-        //	elems[i].style.color = 'green';
-    }
+function addComment()
+{
+	var currentPropertyIndex = document.getElementById("selectedProperty").value;
+
+	if (currentPropertyIndex != "")
+	{
+		var elemIndicator = document.getElementById(currentPropertyIndex);
+
+		var textareaelem = document.getElementById("currentComment");
+
+		if (textareaelem.value.trim() == '')
+			elemIndicator.style.color = 'blue';
+		else
+			elemIndicator.style.color = 'orange';
+	}
 }

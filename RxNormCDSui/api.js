@@ -9,7 +9,7 @@ var express = require('express'),
 router
 	.use(bodyParser.json())
 	.route('/rxnormtable')
-	.get(function (req, res) {
+	.get(function (req, res, next) {
             //console.log('11111DEEPAKDEEPAKDEEPAK');
 		var connection1 = mysql.createConnection({
   				host     : 'localhost',
@@ -37,7 +37,7 @@ router
         next();
     })
     .route('/tdetails/:tableName')
-        .get(function (req, res) {
+        .get(function (req, res, next) {
             
             //console.log('router DEEPAKDEEPAKDEEPAK');
         	//console.log('tableName=' + req.params.tableName);

@@ -3,15 +3,15 @@ angular.module('RxNormReport')
 	$scope.mainReviewers = ['Kelly A', 'Robert B', 'Anne C'];
 	$scope.guestReviewers = ['Guest Reviewer'];
 
-	$scope.propertyList = ['Dose Form: Drug Form',
-							'Dose Form: Release Pattern',
-							'Dose Form: Delivery Form',
-							'Dose Form: ER Time',
-							'Administration: Route',
-							'Administration: Method',
-							'Delivery Device: Type',
-							'Delivery Device: Capacity',
-							'Delivery Device: ER Time'];
+	$scope.propertyList = [[0,'Dose Form: Drug Form'],
+							[1,'Dose Form: Release Pattern'],
+							[2,'Dose Form: Delivery Form'],
+							[3,'Dose Form: ER Time'],
+							[4,'Administration: Route (site)'],
+							[5,'Administration: Method'],
+							[6,'Delivery Device: Type'],
+							[7,'Delivery Device: Capacity'],
+							[8,'Delivery Device: ER Time']];
 
 	function exitingValues () {
     	this.rxndf = "rxndf_value_here";
