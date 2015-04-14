@@ -4,21 +4,29 @@
         <table>
             <thead>
                 <tr>
-                    <div class="control-group">
-                        <label class="control-label" for="reviewers">Reviewer:</label>
-                        <select id="reviewers" 
-                            name="reviewers" 
-                            class="dropdown-toggle" 
-                            data-toggle="dropdown" 
-                            ng-model="selection.reviewer"
-                            onchange="changeReviewer()">
-                            <option value="">Select Reviewer</option>
-                            <option ng-repeat="mainrev in mainReviewers" 
-                                value="{{mainrev}}">{{mainrev}}</option>
-                            <option ng-repeat="guestrev in guestReviewers" 
-                                value="{{guestrev}}">{{guestrev}}</option>
-                        </select>
-                    </div>
+                    <td class="col-sm-8">
+                        <div class="control-group">
+                            <label class="control-label" for="reviewers">&nbsp;&nbsp;&nbsp;Reviewers:&nbsp;&nbsp;</label>
+                            <select id="reviewers" 
+                                name="reviewers" 
+                                class="dropdown-toggle" 
+                                data-toggle="dropdown" 
+                                ng-model="selection.reviewer"
+                                onchange="changeReviewer()">
+                                <option value="">Select a reviewer</option>
+                                <option ng-repeat="mainrev in mainReviewers" 
+                                    value="{{mainrev}}">{{mainrev}}</option>
+                                <option ng-repeat="guestrev in guestReviewers" 
+                                    value="{{guestrev}}">{{guestrev}}</option>
+                            </select>
+                            <label ng-show="!selection.reviewer" style="color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please select a reviewer to continue...</label>
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;
+                    </td>
                 </tr>
             </thead>
             <tbody>
@@ -27,174 +35,187 @@
                         <fieldset ng-disabled="!selection.reviewer">
                             <table>
                                 <tr>
-                                    <td>
-                                    <table>
-                                        <tr>
-                                            <td class="col-sm-8">
-                                                <b>SCD:</b>&nbsp;&nbsp;{{currentDrug.scd}}
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <b>RxCUI:</b>&nbsp;&nbsp;{{currentDrug.rxcui}}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="panel panel-success">
-                                                    <div class="panel-heading">
-                                                        <h3 class="panel-title">Exisitng</h3>
+                                    <td class="col-sm-8">
+                                        <table>
+                                            <tr>
+                                                <td class="col-sm-8">
+                                                    <b>Drug(SCD):</b>&nbsp;&nbsp;{{currentDrug.scd}}
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <b>RxCUI:</b>&nbsp;&nbsp;{{currentDrug.rxcui}}
+                                                </td>
+                                                <td class="col-sm-4" rowspan="5" align="top">
+                                                    <div class="panel panel-warning">
+                                                        <div class="panel-heading">
+                                                                <h3 class="panel-title">Comment</h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <table>
+                                                                <tr>
+                                                                    <td><h4>Reviewer:&nbsp;&nbsp;<b><span id="currentReviewer"></span></b></h4></td>
+                                                                </tr> 
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="control-group">
+                                                                            <label class="control-label" for="reviewers">Please add comments for </label>
+                                                                            <select id="selectedProperty" 
+                                                                                    name="selectedProperty" 
+                                                                                    class="dropdown-toggle" 
+                                                                                    data-toggle="dropdown" 
+                                                                                    ng-model="selection.property"
+                                                                                    onchange="changeSelectedProperty()" 
+                                                                                    style="height:200px"
+                                                                                    multiple>
+                                                                                    <option ng-repeat="prop in propertyList" 
+                                                                                    value="{{prop[1]}}">{{prop[1]}}</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr><td>&nbsp;</td></tr>
+                                                                <tr>
+                                                                    <td ><textarea id="currentComment" ng-model="newComemnt" style="hieght:100%" class="form-control col-xs-12" ng-disabled="!selection.property"></textarea></td>
+                                                                </tr>
+                                                                <tr><td>&nbsp;</td></tr>
+                                                                <tr><td class="col-sm-1"><button id="addCommentButton" name="okButtonName" class="btn btn-success" onclick="addComment()" ng-disabled="!selection.property">Update</button></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                    <div class="panel-body">
-                                                        <table>
-                                                            <tr>
-                                                                <td><b>RxNDF:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxndf}}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><b>RxTndF:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxtndf}}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><b>RxTroute:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxtroute}}</td>
-                                                            </tr>
-                                                        </table>
+                                                </td>
+                                            </tr>
+                                            <tr><td>&nbsp;</td></tr>
+                                            <tr>
+                                                <td class="col-sm-8">
+                                                    <div class="panel panel-success">
+                                                        <div class="panel-heading">
+                                                            <h3 class="panel-title">Exisitng</h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <table>
+                                                                <tr>
+                                                                    <td><b>RxNDF:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxndf}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>RxTndF:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxtndf}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>RxTroute:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxtroute}}</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-sm-8">
-                                                <div class="panel panel-primary">
-                                                    <div class="panel-heading">
-                                                        <h3 class="panel-title">Proposed</h3>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-sm-8">
+                                                    <div class="panel panel-primary">
+                                                        <div class="panel-heading">
+                                                            <h3 class="panel-title">Proposed</h3>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <table class="table table-borderless">
+                                                                <tr><td><h4><span class="label label-default">Dose Forms</span></h4></td></tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <b>{{propertyList[0][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfdrugform}}
+                                                                        <span id="{{propertyList[0][1]}}" style ="color:blue" class='glyphicon glyphicon-stop' 
+                                                                        onClick="setSelectedProperty(this.id, 0)"></span>
+                                                                        <span id="OK{{propertyList[0][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[0][0]}}" type="hidden" value=""></input>
+                                                                    </td>
+                                                                    <td>
+                                                                    <b>{{propertyList[1][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfreleasepattern}}
+                                                                        <span id="{{propertyList[1][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                                        onClick="setSelectedProperty(this.id, 1)"></span>
+                                                                        <span id="OK{{propertyList[1][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[1][0]}}" type="hidden" value=""></input>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <b>{{propertyList[2][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfdeliveryform}}
+                                                                        <span id="{{propertyList[2][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                                        onClick="setSelectedProperty(this.id, 2)"></span>
+                                                                        <span id="OK{{propertyList[2][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[2][0]}}" type="hidden" value=""></input>
+                                                                    </td>
+                                                                    <td>
+                                                                        <b>{{propertyList[3][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfertime}}
+                                                                        <span id="{{propertyList[3][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                                        onClick="setSelectedProperty(this.id, 3)"></span>
+                                                                        <span id="OK{{propertyList[3][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[3][0]}}" type="hidden" value=""></input>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr><td><h4><span class="label label-default">Administration</span></h4></td></tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <b>{{propertyList[4][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().admroute}}
+                                                                        <span id="{{propertyList[4][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                                        onClick="setSelectedProperty(this.id, 4)"></span>
+                                                                        <span id="OK{{propertyList[4][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[4][0]}}" type="hidden" value=""></input>
+                                                                    </td>
+                                                                    <td>
+                                                                        <b>{{propertyList[5][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().admmethod}}
+                                                                        <span id="{{propertyList[5][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                                        onClick="setSelectedProperty(this.id, 5)"></span>
+                                                                        <span id="OK{{propertyList[5][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[5][0]}}" type="hidden" value=""></input>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr><td><h4><span class="label label-default">Delivery Device</span></h4></td></tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <b>{{propertyList[6][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddtype}}
+                                                                        <span id="{{propertyList[6][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                                        onClick="setSelectedProperty(this.id, 6)"></span>
+                                                                        <span id="OK{{propertyList[6][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[6][0]}}" type="hidden" value=""></input>
+                                                                    </td>
+                                                                    <td>
+                                                                        <b>{{propertyList[7][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddcapacity}}
+                                                                        <span id="{{propertyList[7][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                                        onClick="setSelectedProperty(this.id, 7)"></span>
+                                                                        <span id="OK{{propertyList[7][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[7][0]}}" type="hidden" value=""></input>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td>
+                                                                        <b>{{propertyList[8][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddertime}}
+                                                                        <span id="{{propertyList[8][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                                        onClick="setSelectedProperty(this.id, 8)"></span>
+                                                                        <span id="OK{{propertyList[8][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[8][0]}}" type="hidden" value=""></input>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                    <div class="panel-body">
-                                                        <table class="table table-borderless">
-                                                            <tr><td><h4><span class="label label-default">Dose Forms</span></h4></td></tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <b>{{propertyList[0][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfdrugform}}
-                                                                    <span id="{{propertyList[0][1]}}" style ="color:blue" class='glyphicon glyphicon-stop' 
-                                                                    onClick="setSelectedProperty(this.id)"></span>
-                                                                    <span id="TUP{{propertyList[0][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
-                                                                </td>
-                                                                <td>
-                                                                <b>{{propertyList[1][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfreleasepattern}}
-                                                                    <span id="{{propertyList[1][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
-                                                                    onClick="setSelectedProperty(this.id)"></span>
-                                                                    <span id="TUP{{propertyList[1][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <b>{{propertyList[2][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfdeliveryform}}
-                                                                    <span id="{{propertyList[2][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
-                                                                    onClick="setSelectedProperty(this.id)"></span>
-                                                                    <span id="TUP{{propertyList[2][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
-                                                                </td>
-                                                                <td>
-                                                                    <b>{{propertyList[3][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfertime}}
-                                                                    <span id="{{propertyList[3][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
-                                                                    onClick="setSelectedProperty(this.id)"></span>
-                                                                    <span id="TUP{{propertyList[3][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr><td><h4><span class="label label-default">Administration</span></h4></td></tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <b>{{propertyList[4][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().admroute}}
-                                                                    <span id="{{propertyList[4][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
-                                                                    onClick="setSelectedProperty(this.id)"></span>
-                                                                    <span id="TUP{{propertyList[4][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <b>{{propertyList[5][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().admmethod}}
-                                                                    <span id="{{propertyList[5][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
-                                                                    onClick="setSelectedProperty(this.id)"></span>
-                                                                    <span id="TUP{{propertyList[5][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr><td><h4><span class="label label-default">Delivery Device</span></h4></td></tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <b>{{propertyList[6][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddtype}}
-                                                                    <span id="{{propertyList[6][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
-                                                                    onClick="setSelectedProperty(this.id)"></span>
-                                                                    <span id="TUP{{propertyList[6][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
-                                                                </td>
-                                                                <td>
-                                                                    <b>{{propertyList[7][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddcapacity}}
-                                                                    <span id="{{propertyList[7][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
-                                                                    onClick="setSelectedProperty(this.id)"></span>
-                                                                    <span id="TUP{{propertyList[7][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td>
-                                                                    <b>{{propertyList[8][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddertime}}
-                                                                    <span id="{{propertyList[8][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
-                                                                    onClick="setSelectedProperty(this.id)"></span>
-                                                                    <span id="TUP{{propertyList[8][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-thumbs-up' ></span>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-sm-8">
+                                                    <div class="control-group" >
+                                                        <div class="controls" align="center">
+                                                            <table>
+                                                                <tr>
+                                                                    <td class="col-sm-4"></td>
+                                                                    <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary">Previous</button></td>
+                                                                    <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success" onclick="setOK()">Review Done!</button></td>
+                                                                    <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary">SKIP & Next >></button></td>
+                                                                    <td class="col-sm-4"></td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <div class="control-group" >
-                                                    <div class="controls" align="center">
-                                                        <table>
-                                                            <tr>
-                                                                <td class="col-sm-4"></td>
-                                                                <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary">Previous</button></td>
-                                                                <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success" onclick="setOK()">Review Done!</button></td>
-                                                                <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary">Next</button></td>
-                                                                <td class="col-sm-4"></td>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    </td>
-                                    <td>
-                                        <div class="panel panel-warning">
-                                            <div class="panel-heading">
-                                                    <h3 class="panel-title">Comment</h3>
-                                            </div>
-                                            <div class="panel-body">
-                                                <table>
-                                                    <tr>
-                                                        <td><h4>Reviewer:&nbsp;&nbsp;<b><span id="currentReviewer"></span></b></h4></td>
-                                                    </tr> 
-                                                    <tr>
-                                                        <td>
-                                                            <div class="control-group">
-                                                                <label class="control-label" for="reviewers">Please add comments for </label>
-                                                                <select id="selectedProperty" 
-                                                                        name="selectedProperty" 
-                                                                        class="dropdown-toggle" 
-                                                                        data-toggle="dropdown" 
-                                                                        ng-model="selection.property"
-                                                                        onchange="changeSelectedProperty()">
-                                                                        <option value="">Select a property to comment on</option>
-                                                                        <option ng-repeat="prop in propertyList" 
-                                                                        value="{{prop[1]}}">{{prop[1]}}</option>
-                                                                </select>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr><td>&nbsp;</td></tr>
-                                                    <tr>
-                                                        <td><textarea id="currentComment" class="form-control col-xs-12" onblur="addComment()" ng-disabled="!selection.property"></textarea></td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </table>

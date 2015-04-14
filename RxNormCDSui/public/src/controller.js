@@ -1,6 +1,6 @@
 angular.module('RxNormReport')
 .controller('RxNormReview', function ($scope) {
-	$scope.mainReviewers = ['Kelly A', 'Robert B', 'Anne C'];
+	$scope.mainReviewers = ['Kelly K. Wix', 'Robert R. Freimuth', 'Stacy J. Ellingson'];
 	$scope.guestReviewers = ['Guest Reviewer'];
 
 	$scope.propertyList = [[0,'Dose Form: Drug Form'],
@@ -48,7 +48,7 @@ angular.module('RxNormReport')
 })
 .controller('RxNormList', function ($scope, MyList, $location) {
 	$scope.list1 = MyList.query();
-	$scope.fields = ['Tables_in_rxnormcds'];
+	$scope.fields = ['Tables_in_rxnorm_march_2015'];
 
 	$scope.sort = function (field)
 	{
@@ -56,7 +56,7 @@ angular.module('RxNormReport')
 		$scope.sort.order = !$scope.sort.order;
 	};
 
-	$scope.sort.field = 'Tables_in_rxnormcds';
+	$scope.sort.field = 'Tables_in_rxnorm_march_2015';
 	$scope.sort.order = false;
 
 	$scope.show = function (tName) {
