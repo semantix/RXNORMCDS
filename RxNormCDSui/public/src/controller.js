@@ -1,5 +1,5 @@
 angular.module('RxNormReport')
-.controller('RxNormReview', function ($scope, AllDrugs, $location) {
+.controller('RxNormReview', function ($scope, allDrugs, existingValues, proposedValues, $location) {
 	$scope.mainReviewers = ['Kelly K. Wix', 'Robert R. Freimuth', 'Stacy J. Ellingson'];
 	$scope.guestReviewers = ['Guest Reviewer'];
 
@@ -13,14 +13,21 @@ angular.module('RxNormReport')
 							[7,'Delivery Device: Capacity'],
 							[8,'Delivery Device: ER Time']];
 
-	function exitingValues () {
-    	this.rxndf = "rxndf_value_here";
-    	this.rxtndf = "rxtndf_value_here";
-    	this.rxtroute= "rxtroute_value";
-	};
+	// function getExitingValues (cindex) 
+	// {
+	// 	//return selectedDrug.query({cui: cindex})
 
-	function proposedValues () {
-    	this.dfdrugform = "DF_Drug_Form_here";
+	// 	this.rxndf = "rxndf_value_here" + cindex;
+ //    	//this.rxtndf = existingVals[0];
+ //    	this.rxtroute= "rxtroute_value";
+
+ //    	//this.rxndf = "rxndf_value_here" + cindex;
+ //    	this.rxtndf = "rxtndf_value_here";
+ //    	//this.rxtroute= "rxtroute_value";
+	// };
+
+	function proposedDummyValues (cindex) {
+    	this.dfdrugform = "DF_Drug_Form_here" + cindex;
     	this.dfreleasepattern = "DF_Release_Pattern_here";
     	this.dfdeliveryform= "DF_Delivery_Form_here";
     	this.dfertime= "DF_ER_time_here";
@@ -33,21 +40,61 @@ angular.module('RxNormReport')
     	this.ddertime= "DEL_ER_Time_here";
 	};
 
-   	var allDrugs = AllDrugs.query();
+	var allDrugs = allDrugs.query();
 
-   	var drug = {
-   		entries: allDrugs,
-   		ind : 0,
+   	var drug = 
+   	{
+   			entries: allDrugs,
+   			ind : 0
+   	} ;
 
-   		getExistingValues: function(){
-   			return new exitingValues();
-   		},
+	$scope.cuis = drug;
 
-   		getProposedValues: function(){
-   			return new proposedValues();
-   		}
-   	}
-   	$scope.cuis = drug;
+	$scope.initializeValues = function(ci)
+	{
+		$scope.getExisting(drug.entries[ci]['SCD_rxcui']);
+		$scope.getProposed(drug.entries[ci]['SCD_rxcui']);
+	}
+
+	$scope.getExisting = function(cuiValue1) 
+	{
+		console.log("This was called for existing values");
+		$scope.existing = existingValues.query({cui1:cuiValue1});
+	};
+   	
+   	$scope.getProposed = function(cuiValue2) 
+	{
+		console.log("This was called for proposed values");
+		$scope.proposed = proposedValues.query({cui2:cuiValue2});
+	};
+
+   	$scope.getNext = function() {
+
+		var nxtI = parseInt(drug.ind) + 1;
+
+		if (!(nxtI < drug.entries.length - 1))
+		{
+			nxtI = drug.entries.length - 1;
+		}
+
+		drug.ind = nxtI;
+		$scope.getExisting(drug.entries[nxtI]['SCD_rxcui']);
+		$scope.getProposed(drug.entries[nxtI]['SCD_rxcui']);
+   	};
+
+   	$scope.getPrev = function() {
+
+		var nxtI = parseInt(drug.ind) - 1;
+
+		if (nxtI < 1)
+		{
+			nxtI = 0;
+		}
+
+		drug.ind = nxtI;
+		$scope.getExisting(drug.entries[nxtI]['SCD_rxcui']);
+		$scope.getProposed(drug.entries[nxtI]['SCD_rxcui']);
+   	};   	
 })
 .controller('RxNormList', function ($scope, MyList, $location) {
 	$scope.list1 = MyList.query();

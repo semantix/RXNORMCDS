@@ -12,7 +12,8 @@
                                 class="dropdown-toggle" 
                                 data-toggle="dropdown" 
                                 ng-model="selection.reviewer"
-                                onchange="changeReviewer()">
+                                ng-change="initializeValues({{cuis.ind}});"
+                                onchange="changeReviewer();">
                                 <option value="">Select a reviewer</option>
                                 <option ng-repeat="mainrev in mainReviewers" 
                                     value="{{mainrev}}">{{mainrev}}</option>
@@ -22,7 +23,12 @@
                             <label ng-show="!selection.reviewer" style="color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please select a reviewer to continue...</label>
                         </div>
                     </td>
-
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr class="col-sm-8" ng-hide="!selection.reviewer">
+                    <td><span id="counterDisp" style="color:green;font-style:italic">
+                    &nbsp;&nbsp;&nbsp;Reviewing&nbsp;:&nbsp;({{cuis.ind + 1}}&nbsp;of&nbsp;{{cuis.entries.length}})&nbsp;
+                    [&nbsp;Status:&nbsp;<u>{{cuis.entries[cuis.ind]['review_status']}}</u>&nbsp;]</span></td>
                 </tr>
                 <tr>
                     <td>&nbsp;
@@ -30,7 +36,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr ng-hide="!selection.reviewer">
                     <td>
                         <fieldset ng-disabled="!selection.reviewer">
                             <table>
@@ -39,13 +45,11 @@
                                         <table>
                                             <tr>
                                                 <td class="col-sm-8">
-                                                    <input id="scds2Review" type="hidden" value="{{cuis}}"></input>
-                                                    <b>Drug(SCD):</b>&nbsp;&nbsp;<span id="scd_df" >{{cuis.entries[cuis.ind]['DF_str']}}</span>
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     <b>RxCUI:</b>&nbsp;&nbsp;<span id="scd_rxcui">{{cuis.entries[cuis.ind]['SCD_rxcui']}}</span>
-                                                    <span id="counterDisp">({{cuis.ind}}/{{cuis.entries.length}})</span>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <b>Drug(SCD):</b>&nbsp;&nbsp;<span id="scd_df">{{cuis.entries[cuis.ind]['DF_str']}}</span>
                                                 </td>
                                                 <td class="col-sm-4" rowspan="5" align="top">
                                                     <div class="panel panel-warning">
@@ -97,13 +101,13 @@
                                                         <div class="panel-body">
                                                             <table>
                                                                 <tr>
-                                                                    <td><b>RxNDF:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxndf}}</td>
+                                                                    <td><b>RxNDF:</b>&nbsp;&nbsp;{{existing[0]['DISP_N_rxt']}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><b>RxTndF:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxtndf}}</td>
+                                                                    <td><b>RxTndF:</b>&nbsp;&nbsp;{{existing[0]['NEWDF_rxt']}}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><b>RxTroute:</b>&nbsp;&nbsp;{{currentDrug.getExistingValues().rxtroute}}</td>
+                                                                    <td><b>RxTroute:</b>&nbsp;&nbsp;{{existing[0]['ROUTE_rxt']}}</td>
                                                                 </tr>
                                                             </table>
                                                         </div>
@@ -121,14 +125,16 @@
                                                                 <tr><td><h4><span class="label label-default">Dose Forms</span></h4></td></tr>
                                                                 <tr>
                                                                     <td>
-                                                                        <b>{{propertyList[0][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfdrugform}}
+                                                                        <b>{{propertyList[0][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[0][1]}}" style ="color:blue" class='glyphicon glyphicon-stop' 
                                                                         onClick="setSelectedProperty(this.id, 0)"></span>
                                                                         <span id="OK{{propertyList[0][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
                                                                         <input id="NEW{{propertyList[0][0]}}" type="hidden" value=""></input>
                                                                     </td>
                                                                     <td>
-                                                                    <b>{{propertyList[1][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfreleasepattern}}
+                                                                    <b>{{propertyList[1][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[1][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 1)"></span>
                                                                         <span id="OK{{propertyList[1][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
@@ -137,14 +143,16 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>
-                                                                        <b>{{propertyList[2][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfdeliveryform}}
+                                                                        <b>{{propertyList[2][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[2][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 2)"></span>
                                                                         <span id="OK{{propertyList[2][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
                                                                         <input id="NEW{{propertyList[2][0]}}" type="hidden" value=""></input>
                                                                     </td>
                                                                     <td>
-                                                                        <b>{{propertyList[3][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().dfertime}}
+                                                                        <b>{{propertyList[3][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[3][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 3)"></span>
                                                                         <span id="OK{{propertyList[3][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
@@ -154,14 +162,16 @@
                                                                 <tr><td><h4><span class="label label-default">Administration</span></h4></td></tr>
                                                                 <tr>
                                                                     <td>
-                                                                        <b>{{propertyList[4][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().admroute}}
+                                                                        <b>{{propertyList[4][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[4][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 4)"></span>
                                                                         <span id="OK{{propertyList[4][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
                                                                         <input id="NEW{{propertyList[4][0]}}" type="hidden" value=""></input>
                                                                     </td>
                                                                     <td>
-                                                                        <b>{{propertyList[5][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().admmethod}}
+                                                                        <b>{{propertyList[5][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[5][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 5)"></span>
                                                                         <span id="OK{{propertyList[5][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
@@ -171,14 +181,16 @@
                                                                 <tr><td><h4><span class="label label-default">Delivery Device</span></h4></td></tr>
                                                                 <tr>
                                                                     <td>
-                                                                        <b>{{propertyList[6][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddtype}}
+                                                                        <b>{{propertyList[6][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[6][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 6)"></span>
                                                                         <span id="OK{{propertyList[6][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
                                                                         <input id="NEW{{propertyList[6][0]}}" type="hidden" value=""></input>
                                                                     </td>
                                                                     <td>
-                                                                        <b>{{propertyList[7][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddcapacity}}
+                                                                        <b>{{propertyList[7][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[7][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 7)"></span>
                                                                         <span id="OK{{propertyList[7][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
@@ -188,7 +200,8 @@
                                                                 <tr>
                                                                     <td></td>
                                                                     <td>
-                                                                        <b>{{propertyList[8][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;{{currentDrug.getProposedValues().ddertime}}
+                                                                        <b>{{propertyList[8][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[8][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 8)"></span>
                                                                         <span id="OK{{propertyList[8][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
@@ -207,9 +220,9 @@
                                                             <table>
                                                                 <tr>
                                                                     <td class="col-sm-4"></td>
-                                                                    <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary" onclick="getPrevious();" ng-disabled="!({{cuis.ind}} > 0)">Previous</button></td>
+                                                                    <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary" ng-click="getPrev();" ng-disabled="(cuis.ind == 0)">Previous</button></td>
                                                                     <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success" onclick="setOK()">Review Done!</button></td>
-                                                                    <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary" ng-disabled="!({{cuis.ind}} < (cuis.entries.length -1))" onclick="saveOrSkip();">SKIP & Next >></button></td>
+                                                                    <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary" ng-disabled="!(cuis.ind < (cuis.entries.length -1))" ng-click="getNext();">SKIP & Next >></button></td>
                                                                     <td class="col-sm-4"></td>
                                                                 </tr>
                                                             </table>

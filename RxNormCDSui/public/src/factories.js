@@ -6,10 +6,13 @@ angular.module('RxNormReport')
 }).factory('MyTableDetails', function ($resource){
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
 	return $resource('/api/tdetails/:tableName', {tableName : '@tableName'});
-}).factory('AllDrugs', function ($resource){
+}).factory('allDrugs', function ($resource){
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
 	return $resource('/api/scds');
-}).factory('selectedDrug', function ($resource){
+}).factory('existingValues', function ($resource){
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
-	return $resource('/api/scd/:cui', {cui : '@cui'});
+	return $resource('/api/scd/:cui1', {cui1 : '@cui1'});
+}).factory('proposedValues', function ($resource){
+	//console.log('factory DEEPAKDEEPAKDEEPAK');
+	return $resource('/api/scdproposed/:cui2', {cui2 : '@cui2'});
 });
