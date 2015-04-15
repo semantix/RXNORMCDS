@@ -1,5 +1,5 @@
 angular.module('RxNormReport')
-.controller('RxNormReview', function ($scope) {
+.controller('RxNormReview', function ($scope, AllDrugs, $location) {
 	$scope.mainReviewers = ['Kelly K. Wix', 'Robert R. Freimuth', 'Stacy J. Ellingson'];
 	$scope.guestReviewers = ['Guest Reviewer'];
 
@@ -33,22 +33,25 @@ angular.module('RxNormReport')
     	this.ddertime= "DEL_ER_Time_here";
 	};
 
-	var drug = {
-    	scd : "exst_scd_value", 
-		rxcui : "rxcui_value",
+   	var allDrugs = AllDrugs.query();
+
+   	var drug = {
+   		entries: allDrugs,
+   		ind : 0,
+
    		getExistingValues: function(){
    			return new exitingValues();
    		},
+
    		getProposedValues: function(){
    			return new proposedValues();
    		}
    	}
-
-   	$scope.currentDrug = drug;
+   	$scope.cuis = drug;
 })
 .controller('RxNormList', function ($scope, MyList, $location) {
 	$scope.list1 = MyList.query();
-	$scope.fields = ['Tables_in_rxnorm_march_2015'];
+	$scope.fields = ['Tables_in_rxnormcds'];
 
 	$scope.sort = function (field)
 	{
@@ -56,7 +59,7 @@ angular.module('RxNormReport')
 		$scope.sort.order = !$scope.sort.order;
 	};
 
-	$scope.sort.field = 'Tables_in_rxnorm_march_2015';
+	$scope.sort.field = 'Tables_in_rxnormcds';
 	$scope.sort.order = false;
 
 	$scope.show = function (tName) {

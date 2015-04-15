@@ -5,20 +5,79 @@ var express = require('express'),
 	connection  = require('express-myconnection'),
     mysql = require('mysql');
 
-// First Router path
+var connection1 = mysql.createConnection({
+                host     : 'localhost',
+                user     : 'root',
+                password : 'admin',
+                database : 'rxnormcds',
+        });
+
+connection1.connect();
+
+
+router
+    .use(bodyParser.json())
+    .route('/scds')
+    .get(function (req, res, next) 
+    {
+        var queryStr = 'select a.SCD_rxcui, b.DF_str ' +
+                          ' from scd_review a, scd_df b ' +
+                          ' where a.SCD_rxcui = b.SCD_rxcui and ' +
+                          ' a.review_status = "Incomplete" ' +
+                          ' order by a.review_priority, a.SCD_rxcui limit 25';
+
+        var query = connection1.query(queryStr  ,function (err, rows, fields) 
+        {
+            if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+            }
+
+            //connection1.end();
+            res.json(rows);
+         });
+    });
+
+router
+    .param('cui', function (req, res, next) {
+        //req.dbQuery = { id: parseInt(req.params.id, 10) };
+        next();
+    })
+    .route('/scd/:cui')
+    .get(function (req, res, next) 
+    {
+        var cui = req.params.cui;
+
+        var cond = '';
+        if (cui)
+            cond = ' a.SCD_rxcui = "' + cui + '" ';
+
+        var queryStr = 'select a.SCD_rxcui, b.DF_str ' +
+                          ' from scd_review a, scd_df b ' +
+                          ' where a.SCD_rxcui = b.SCD_rxcui and ' +
+                          ' a.review_status = "Incomplete" ' +
+                          cond +
+                          ' order by a.review_priority, a.SCD_rxcui limit 10 ';
+
+        var query = connection1.query(queryStr  ,function (err, rows, fields) 
+        {
+            if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+            }
+
+            //connection1.end();
+            res.json(rows);
+         });
+    });
+
 router
 	.use(bodyParser.json())
 	.route('/rxnormtable')
 	.get(function (req, res, next) {
             //console.log('11111DEEPAKDEEPAKDEEPAK');
-		var connection1 = mysql.createConnection({
-  				host     : 'localhost',
-        		user     : 'root',
-        		password : 'admin',
-        		database : 'rxnormcds',
-		});
 
-		connection1.connect();
+		//connection1.connect();
 
         var query = connection1.query('show tables',function (err, rows, fields) {
             if(err){
@@ -26,7 +85,7 @@ router
                 return next("Mysql error, check your query");
             }
 
-            connection1.end();
+            //connection1.end();
             res.json(rows);
          });
 	});
@@ -42,14 +101,8 @@ router
             //console.log('router DEEPAKDEEPAKDEEPAK');
         	//console.log('tableName=' + req.params.tableName);
 		
-            var connection1 = mysql.createConnection({
-  				host     : 'localhost',
-        		user     : 'root',
-        		password : 'admin',
-        		database : 'rxnormcds',
-		});
 
-		connection1.connect();
+		//connection1.connect();
 
 		var tn = req.params.tableName;
 
@@ -59,7 +112,7 @@ router
                 return next("Mysql error, check your query");
             }
 
-            connection1.end();
+            //connection1.end();
             res.json(rows);
           });
         })

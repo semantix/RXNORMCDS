@@ -149,3 +149,73 @@ function addComment()
 
 	textareaelem.value = '';
 }
+
+function saveOrSkip(selectedDrug)
+{
+	// put the save methd here
+	var cuis = JSON.parse(document.getElementById("scds2Review").value);
+
+	if ((!cuis)||(cuis.entries.length < 1))
+		return;
+
+	var prevButtn = document.getElementById("prevButton");
+	var nextButtn = document.getElementById("nextButton");
+
+	var nxtI = parseInt(cuis.ind) + 1;
+
+	if (nxtI < 1)
+		prevButtn.disabled = true;
+	else
+		prevButtn.disabled = false;
+
+	if (!(nxtI < cuis.entries.length - 1))
+	{
+		nextButtn.disabled = true;
+		nxtI = cuis.entries.length - 1;
+	}
+	else
+		nextButtn.disabled = false;
+
+	cuis.ind = nxtI;
+
+	var existingValues = angular.element(document.getElementById('RxNormReview')).scope();
+
+	document.getElementById("scd_df").innerHTML = cuis.entries[cuis.ind]['DF_str'];
+	document.getElementById("scd_rxcui").innerHTML = cuis.entries[cuis.ind]['SCD_rxcui'];
+	document.getElementById("scds2Review").value = JSON.stringify(cuis);
+	document.getElementById("counterDisp").innerHTML = '(' + (cuis.ind + 1) + ' of ' + cuis.entries.length + ')';
+}
+
+function getPrevious()
+{
+	// put the save methd here
+	var cuis = JSON.parse(document.getElementById("scds2Review").value);
+
+	if ((!cuis)||(cuis.entries.length < 1))
+		return;
+
+	var prevButtn = document.getElementById("prevButton");
+	var nextButtn = document.getElementById("nextButton");
+
+	var nxtI = parseInt(cuis.ind) - 1;
+
+	if (nxtI < 1)
+	{
+		prevButtn.disabled = true;
+		nxtI = 0;
+	}
+	else
+		prevButtn.disabled = false;
+
+	if (!(nxtI < cuis.entries.length - 1))
+		nextButtn.disabled = true;
+	else
+		nextButtn.disabled = false;
+
+	cuis.ind = nxtI;
+
+	document.getElementById("scd_df").innerHTML = cuis.entries[cuis.ind]['DF_str'];
+	document.getElementById("scd_rxcui").innerHTML = cuis.entries[cuis.ind]['SCD_rxcui'];
+	document.getElementById("scds2Review").value = JSON.stringify(cuis);
+	document.getElementById("counterDisp").innerHTML = '(' + (cuis.ind + 1) + ' of ' + cuis.entries.length + ')';
+}

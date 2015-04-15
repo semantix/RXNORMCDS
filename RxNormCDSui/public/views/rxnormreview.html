@@ -39,11 +39,13 @@
                                         <table>
                                             <tr>
                                                 <td class="col-sm-8">
-                                                    <b>Drug(SCD):</b>&nbsp;&nbsp;{{currentDrug.scd}}
+                                                    <input id="scds2Review" type="hidden" value="{{cuis}}"></input>
+                                                    <b>Drug(SCD):</b>&nbsp;&nbsp;<span id="scd_df" >{{cuis.entries[cuis.ind]['DF_str']}}</span>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <b>RxCUI:</b>&nbsp;&nbsp;{{currentDrug.rxcui}}
+                                                    <b>RxCUI:</b>&nbsp;&nbsp;<span id="scd_rxcui">{{cuis.entries[cuis.ind]['SCD_rxcui']}}</span>
+                                                    <span id="counterDisp">({{cuis.ind}}/{{cuis.entries.length}})</span>
                                                 </td>
                                                 <td class="col-sm-4" rowspan="5" align="top">
                                                     <div class="panel panel-warning">
@@ -205,13 +207,13 @@
                                                             <table>
                                                                 <tr>
                                                                     <td class="col-sm-4"></td>
-                                                                    <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary">Previous</button></td>
+                                                                    <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary" onclick="getPrevious();" ng-disabled="!({{cuis.ind}} > 0)">Previous</button></td>
                                                                     <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success" onclick="setOK()">Review Done!</button></td>
-                                                                    <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary">SKIP & Next >></button></td>
+                                                                    <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary" ng-disabled="!({{cuis.ind}} < (cuis.entries.length -1))" onclick="saveOrSkip();">SKIP & Next >></button></td>
                                                                     <td class="col-sm-4"></td>
                                                                 </tr>
                                                             </table>
-                                                        </div>
+                                                        </div> 
                                                     </div>
                                                 </td>
                                             </tr>
