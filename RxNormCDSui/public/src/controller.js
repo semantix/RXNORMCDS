@@ -1,5 +1,5 @@
 angular.module('RxNormReport')
-.controller('RxNormReview', function ($scope, allDrugs, existingValues, proposedValues, $location) {
+.controller('RxNormReview', function ($scope, allDrugs, existingValues, proposedValues, Comment, $location) {
 	$scope.mainReviewers = ['Kelly K. Wix', 'Robert R. Freimuth', 'Stacy J. Ellingson'];
 	$scope.guestReviewers = ['Guest Reviewer'];
 
@@ -11,33 +11,34 @@ angular.module('RxNormReport')
 							[5,'Administration: Method'],
 							[6,'Delivery Device: Type'],
 							[7,'Delivery Device: Capacity'],
-							[8,'Delivery Device: ER Time']];
+							[8,'Delivery Device: ER Time'],
+							[9,'General Comments']];
 
-	// function getExitingValues (cindex) 
-	// {
-	// 	//return selectedDrug.query({cui: cindex})
+	$scope.updateComment = function (event, ccui) 
+	{
+		console.log("Reviwer:" + $scope.selection.reviewer);
+    	console.log("Comemnt:" + event.target.getAttribute('value'));
+    	console.log("id:" + event.target.getAttribute('id'));
+    	var index = event.target.getAttribute('id').split('NEW')[1];
+    	console.log("index=" + index);
+    	console.log("Property=" + $scope.propertyList[index][1]);
 
-	// 	this.rxndf = "rxndf_value_here" + cindex;
- //    	//this.rxtndf = existingVals[0];
- //    	this.rxtroute= "rxtroute_value";
+    	$scope.comment = new Comment(
+    	{
+    		reviewer: [$scope.selection.reviewer, 'text'],
+    		cmtText : [event.target.getAttribute('value'), 'text'],
+    		property : [$scope.propertyList[index][1], 'text'],
+    		cui : [ccui, 'text']
+    	});
 
- //    	//this.rxndf = "rxndf_value_here" + cindex;
- //    	this.rxtndf = "rxtndf_value_here";
- //    	//this.rxtroute= "rxtroute_value";
-	// };
-
-	function proposedDummyValues (cindex) {
-    	this.dfdrugform = "DF_Drug_Form_here" + cindex;
-    	this.dfreleasepattern = "DF_Release_Pattern_here";
-    	this.dfdeliveryform= "DF_Delivery_Form_here";
-    	this.dfertime= "DF_ER_time_here";
-
-    	this.admroute= "ADMIN_Route_here";
-    	this.admmethod= "ADMIN_Method_here";
-
-    	this.ddtype= "DEL_Type_here";
-    	this.ddcapacity= "DEL_Capacity_here";
-    	this.ddertime= "DEL_ER_Time_here";
+    	if ($scope.comment.$invalid) 
+    	{
+            $scope.$broadcast('record:invalid');
+        } 
+        else 
+        {
+            $scope.comment.$save();
+        }
 	};
 
 	var allDrugs = allDrugs.query();
@@ -46,7 +47,7 @@ angular.module('RxNormReport')
    	{
    			entries: allDrugs,
    			ind : 0
-   	} ;
+   	};
 
 	$scope.cuis = drug;
 
@@ -54,7 +55,9 @@ angular.module('RxNormReport')
 	{
 		$scope.getExisting(drug.entries[ci]['SCD_rxcui']);
 		$scope.getProposed(drug.entries[ci]['SCD_rxcui']);
-	}
+
+		console.log("Reviewer:" + $scope.selection.reviewer);
+	};
 
 	$scope.getExisting = function(cuiValue1) 
 	{
@@ -80,6 +83,7 @@ angular.module('RxNormReport')
 		drug.ind = nxtI;
 		$scope.getExisting(drug.entries[nxtI]['SCD_rxcui']);
 		$scope.getProposed(drug.entries[nxtI]['SCD_rxcui']);
+		$scope.nextButtonTitle = "SKIP & Next";
    	};
 
    	$scope.getPrev = function() {
@@ -94,6 +98,7 @@ angular.module('RxNormReport')
 		drug.ind = nxtI;
 		$scope.getExisting(drug.entries[nxtI]['SCD_rxcui']);
 		$scope.getProposed(drug.entries[nxtI]['SCD_rxcui']);
+		$scope.nextButtonTitle = "SKIP & Next";
    	};   	
 })
 .controller('RxNormList', function ($scope, MyList, $location) {

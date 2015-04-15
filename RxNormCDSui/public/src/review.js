@@ -87,6 +87,30 @@ function setSelectedProperty(clickedProperty, commentIndex)
 		document.getElementById("currentComment").value = newValueHolder.value;
 }
 
+function resetOK()
+{
+	for (i=0; i < 9; i++)
+	{
+		var elem = document.getElementById("OK"+i);
+		var buttn = document.getElementById('okButton');
+		var nxtbuttn = document.getElementById('nextButton');
+
+		if (elem.style.visibility == "visible")
+		{
+			elem.style.visibility = "hidden";
+		}
+			
+		buttn.classList.add('btn-success');
+		buttn.classList.remove('btn-warning');
+		buttn.innerHTML = "Review Done!";
+			
+		nxtbuttn.innerHTML = "SKIP & Next >>";
+		document.getElementById("currentComment").disabled = false;
+		document.getElementById("selectedProperty").disabled = false;
+		document.getElementById("addCommentButton").disabled = false;
+	}
+}
+
 function setOK()
 {
 	for (i=0; i < 9; i++)
@@ -143,6 +167,7 @@ function addComment()
 
 				var newValueHolder = document.getElementById("NEW" + i);
 				newValueHolder.value = textareaelem.value.trim();
+				newValueHolder.click();
 			}
 	    }
 	}

@@ -38,8 +38,6 @@ router
          });
     });
 
-
-
     router
     .param('cui2', function (req, res, next) {
         //req.dbQuery = { id: parseInt(req.params.id, 10) };
@@ -82,11 +80,13 @@ router
 
         var cond = '';
         if (cui)
-            cond = ' a.SCD_rxcui = "' + cui + '" ';
+            cond = ' where scd_df.SCD_rxcui = "' + cui + '" ';
 
-        var queryStr = ' select DISP_N_rxt, ROUTE_rxt, NEWDF_rxt ' +
-                       ' from scd_rxterms ' +
-                       ' where SCD_rxcui = "' + cui +'"';
+        var queryStr =  ' select scd_df.SCD_rxcui, scd_df.SCD_str, scd_df.DF_rxcui, scd_df.DF_str, ' +
+                        '        scd_rxterms.ROUTE_rxt, scd_rxterms.NEWDF_rxt ' +
+                        ' from scd_df ' +
+                        ' join scd_rxterms on ( scd_df.SCD_rxcui = scd_rxterms.SCD_rxcui ) ' +
+                        cond ;
 
         var query = connection1.query(queryStr  ,function (err, rows, fields) 
         {
@@ -99,7 +99,49 @@ router
             res.json(rows);
          });
     });
-    
+
+router
+    .param('cui', function (req, res, next) {
+        //req.dbQuery = { id: parseInt(req.params.id, 10) };
+        next();
+    })
+    .route('/scdcomments/:cui')
+        .get(function (req, res) 
+        {
+            //db.findOne(req.dbQuery, function (err, data) {
+             //   res.json(data);    
+            //});
+        })
+        .put(function (req, res) 
+        {
+            var comment = req.body;
+            delete comment.$promise;
+            delete comment.$resolved;
+
+            var updateQuery = 'INSERT INTO scd_comments (SCD_rxcui, SCD_property, SCD_reviewer, SCD_comment) VALUES (' +
+                '"1000001"' + ',' +
+                '"Dose Form: Drug Form"' + ',' +
+                '"Kelly DB"'+ ',' +
+                '"testComment from program"' +
+                ') ON DUPLICATE KEY UPDATE `SCD_comment` = '+
+                '"testComment4 from program"';
+
+                var query = connection1.query(updateQuery  ,function (err, rows, fields) 
+                                        {
+                                            if(err){
+                                                console.log(err);
+                                                return next("Mysql error, check your query");
+                                            }
+
+                                            res.json(rows);
+                                        });
+        })
+        .delete(function (req, res) {
+            //db.delete(req.dbQuery, function () {
+              //  res.json(null);
+            //});
+        });
+
 router
 	.use(bodyParser.json())
 	.route('/rxnormtable')

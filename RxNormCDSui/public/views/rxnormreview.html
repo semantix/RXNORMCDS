@@ -45,11 +45,12 @@
                                         <table>
                                             <tr>
                                                 <td class="col-sm-8">
+                                                    <table><tr><td>
                                                     <b>RxCUI:</b>&nbsp;&nbsp;<span id="scd_rxcui">{{cuis.entries[cuis.ind]['SCD_rxcui']}}</span>
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <b>Drug(SCD):</b>&nbsp;&nbsp;<span id="scd_df">{{cuis.entries[cuis.ind]['DF_str']}}</span>
+                                                    </td><td style="word-wrap: break-word;">
+                                                    &nbsp;&nbsp;
+                                                    <b>Drug(SCD):</b>&nbsp;&nbsp;<span id="scd_df">{{existing[0]['SCD_str']}}</span></td>
+                                                    </tr></table>
                                                 </td>
                                                 <td class="col-sm-4" rowspan="5" align="top">
                                                     <div class="panel panel-warning">
@@ -71,7 +72,7 @@
                                                                                     data-toggle="dropdown" 
                                                                                     ng-model="selection.property"
                                                                                     onchange="changeSelectedProperty()" 
-                                                                                    style="height:200px"
+                                                                                    style="height:220px"
                                                                                     multiple>
                                                                                     <option ng-repeat="prop in propertyList" 
                                                                                     value="{{prop[1]}}">{{prop[1]}}</option>
@@ -99,15 +100,13 @@
                                                             <h3 class="panel-title">Exisitng</h3>
                                                         </div>
                                                         <div class="panel-body">
-                                                            <table>
+                                                            <table cellspacing="1" cellpadding="5">
                                                                 <tr>
-                                                                    <td><b>RxNDF:</b>&nbsp;&nbsp;{{existing[0]['DISP_N_rxt']}}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><b>RxTndF:</b>&nbsp;&nbsp;{{existing[0]['NEWDF_rxt']}}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><b>RxTroute:</b>&nbsp;&nbsp;{{existing[0]['ROUTE_rxt']}}</td>
+                                                                    <td width="10%"><b>RxNorm DF:</b></td><td width="23%" style="word-wrap: break-word;">&nbsp;&nbsp;{{existing[0]['DF_str']}}</td>
+                                                                
+                                                                    <td width="10%"><b>RxTndF:</b></td><td width="22%" style="word-wrap: break-word;">&nbsp;&nbsp;{{existing[0]['NEWDF_rxt']}}</td>
+                                                               
+                                                                    <td width="10%"><b>RxTroute:</b></td><td width="22%" style="word-wrap: break-word;">&nbsp;&nbsp;{{existing[0]['ROUTE_rxt']}}</td>
                                                                 </tr>
                                                             </table>
                                                         </div>
@@ -130,7 +129,7 @@
                                                                         <span id="{{propertyList[0][1]}}" style ="color:blue" class='glyphicon glyphicon-stop' 
                                                                         onClick="setSelectedProperty(this.id, 0)"></span>
                                                                         <span id="OK{{propertyList[0][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[0][0]}}" type="hidden" value=""></input>
+                                                                        <input id="NEW{{propertyList[0][0]}}" type="hidden" value="" ng-click="updateComment($event, cuis.entries[cuis.ind]['SCD_rxcui'])"></input>
                                                                     </td>
                                                                     <td>
                                                                     <b>{{propertyList[1][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
@@ -206,6 +205,7 @@
                                                                         onClick="setSelectedProperty(this.id, 8)"></span>
                                                                         <span id="OK{{propertyList[8][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
                                                                         <input id="NEW{{propertyList[8][0]}}" type="hidden" value=""></input>
+                                                                        <input id="NEW{{propertyList[9][0]}}" type="hidden" value=""></input>
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -220,9 +220,9 @@
                                                             <table>
                                                                 <tr>
                                                                     <td class="col-sm-4"></td>
-                                                                    <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary" ng-click="getPrev();" ng-disabled="(cuis.ind == 0)">Previous</button></td>
+                                                                    <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary" onclick="resetOK()" ng-click="getPrev();" ng-disabled="(cuis.ind == 0)">Previous</button></td>
                                                                     <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success" onclick="setOK()">Review Done!</button></td>
-                                                                    <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary" ng-disabled="!(cuis.ind < (cuis.entries.length -1))" ng-click="getNext();">SKIP & Next >></button></td>
+                                                                    <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary" onclick="resetOK()" ng-click="getNext();">SKIP & Next >></button></td>
                                                                     <td class="col-sm-4"></td>
                                                                 </tr>
                                                             </table>
