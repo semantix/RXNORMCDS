@@ -19,4 +19,8 @@ angular.module('RxNormReport')
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
 	return $resource('/api/scdcomments/:cui', {cui : '@cui'}, {
             'save': { method: 'PUT' }});
+}).factory('ReviewStatus', function ($resource){
+	//console.log('factory DEEPAKDEEPAKDEEPAK');
+	return $resource('/api/scdreviewstatus/:cui3', {cui3 : '@cui3'}, {
+            'save': { method: 'PUT' }});
 });

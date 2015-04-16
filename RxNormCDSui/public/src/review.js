@@ -74,7 +74,7 @@ function setSelectedProperty(clickedProperty, commentIndex)
 
     var buttn = document.getElementById('okButton');
 
-    if (buttn.innerHTML == "Review Again")
+    if (buttn.innerHTML == "REVIEW AGAIN?")
     	return;
 
 	document.getElementById("selectedProperty").value = clickedProperty;
@@ -89,7 +89,10 @@ function setSelectedProperty(clickedProperty, commentIndex)
 
 function resetOK()
 {
-	for (i=0; i < 9; i++)
+	//console.log("Javascript");
+	var selectedProperties = document.getElementById("selectedProperty");
+
+	for (i=0; i < selectedProperties.options.length - 1; i++)
 	{
 		var elem = document.getElementById("OK"+i);
 		var buttn = document.getElementById('okButton');
@@ -100,19 +103,23 @@ function resetOK()
 			elem.style.visibility = "hidden";
 		}
 			
-		buttn.classList.add('btn-success');
-		buttn.classList.remove('btn-warning');
-		buttn.innerHTML = "Review Done!";
+		//buttn.classList.add('btn-success');
+		//buttn.classList.remove('btn-warning');
+		buttn.innerHTML = "REVIEW DONE!";
 			
 		document.getElementById("currentComment").disabled = false;
 		document.getElementById("selectedProperty").disabled = false;
 		document.getElementById("addCommentButton").disabled = false;
 	}
+
+	resetComments();
 }
 
 function setOK()
 {
-	for (i=0; i < 9; i++)
+	var selectedProperties = document.getElementById("selectedProperty");
+
+	for (i=0; i < selectedProperties.options.length - 1; i++)
 	{
 		var elem = document.getElementById("OK"+i);
 		var buttn = document.getElementById('okButton');
@@ -120,9 +127,9 @@ function setOK()
 
 		if (elem.style.visibility == "visible")
 		{
-			buttn.classList.add('btn-success');
-			buttn.classList.remove('btn-warning');
-			buttn.innerHTML = "Review Done!";
+			//buttn.classList.add('btn-success');
+			//buttn.classList.remove('btn-warning');
+			buttn.innerHTML = "REVIEW DONE!";
 			elem.style.visibility = "hidden";
 			nxtbuttn.innerHTML = "SKIP & Next";
 			document.getElementById("currentComment").disabled = false;
@@ -131,15 +138,38 @@ function setOK()
 		}
 		else
 		{
-			buttn.classList.remove('btn-success');
-			buttn.classList.add('btn-warning');
-			buttn.innerHTML = "Review Again";
+			//buttn.classList.remove('btn-success');
+			//buttn.classList.add('btn-warning');
+			buttn.innerHTML = "REVIEW AGAIN?";
 			elem.style.visibility = 'visible';
 			nxtbuttn.innerHTML = "SAVE & Next";
 			document.getElementById("currentComment").value = '';
 			document.getElementById("currentComment").disabled = true;
 			document.getElementById("selectedProperty").disabled = true;
 			document.getElementById("addCommentButton").disabled = true;
+		}
+	}
+}
+
+
+function toggleColor(propInd)
+{
+	if (!propInd)
+		return;
+
+	var selectedProperties = document.getElementById("selectedProperty");
+	currentPropertyIndex = selectedProperties.options[i].value;
+
+	if (currentPropertyIndex != "")
+	{
+		var elemIndicator = document.getElementById(currentPropertyIndex);
+
+		if (elemIndicator)
+		{
+			if (document.getElementById("NEW" + propInd).value.trim() == '')
+				elemIndicator.style.color = 'blue';
+			else
+				elemIndicator.style.color = 'orange';
 		}
 	}
 }
@@ -177,8 +207,30 @@ function addComment()
 	textareaelem.value = '';
 }
 
+function resetComments()
+{
+	var selectedProperties = document.getElementById("selectedProperty");
+	for (i=0; i < selectedProperties.options.length; i++) 
+	{
+		currentPropertyIndex = selectedProperties.options[i].value;
+
+      	if (currentPropertyIndex != "")
+		{
+			var elemIndicator = document.getElementById(currentPropertyIndex);
+
+			if (elemIndicator)
+				elemIndicator.style.color = 'blue';
+		}
+
+	    var newValueHolder = document.getElementById("NEW" + i);
+	    if (newValueHolder)
+	    	newValueHolder.value = '';
+	}
+}
+
 function saveOrSkip(selectedDrug)
 {
+
 	// put the save methd here
 	var cuis = JSON.parse(document.getElementById("scds2Review").value);
 
@@ -211,6 +263,7 @@ function saveOrSkip(selectedDrug)
 	document.getElementById("scd_rxcui").innerHTML = cuis.entries[cuis.ind]['SCD_rxcui'];
 	document.getElementById("scds2Review").value = JSON.stringify(cuis);
 	document.getElementById("counterDisp").innerHTML = '(' + (cuis.ind + 1) + ' of ' + cuis.entries.length + ')';
+	resetComments();
 }
 
 function getPrevious()
@@ -245,4 +298,5 @@ function getPrevious()
 	document.getElementById("scd_rxcui").innerHTML = cuis.entries[cuis.ind]['SCD_rxcui'];
 	document.getElementById("scds2Review").value = JSON.stringify(cuis);
 	document.getElementById("counterDisp").innerHTML = '(' + (cuis.ind + 1) + ' of ' + cuis.entries.length + ')';
+	resetComments();
 }

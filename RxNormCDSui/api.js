@@ -32,8 +32,21 @@ router
                 console.log(err);
                 return next("Mysql error, check your query");
             }
+            else
+            {
+                for (var i=0; i < rows.length;i++)
+                {
+                    var uq = 'update scd_review set review_status = "In Progress" where SCD_rxcui = "' + rows[i].SCD_rxcui + '"';
+                    var qr = connection1.query(uq, function (err, rows2, fields)
+                    {
+                        if(err){
+                                    console.log(err);
+                                    return next("Mysql error in update, check your query");
+                                }
+                    }); 
+                }
+            }
 
-            //connection1.end();
             res.json(rows);
          });
     });
@@ -100,35 +113,63 @@ router
          });
     });
 
-router
-    .param('cui', function (req, res, next) {
+    router
+    .param('cui1', function (req, res, next) {
         //req.dbQuery = { id: parseInt(req.params.id, 10) };
         next();
     })
-    .route('/scdcomments/:cui')
-        .get(function (req, res) 
+    .route('/scdreviewstatus/:cui3')
+    .get(function (req, res, next) 
+    {
+        var cui = req.params.cui3;
+
+        //console.log("cui:" + cui);
+
+        var cond = '';
+        if (cui)
+            cond = ' where SCD_rxcui = "' + cui + '" ';
+        else
+            return next('GET: ReviewStatus: Supplied cui is not defined.');
+
+        //console.log("cond:" + cond);
+
+        var queryStr =  'select review_status from scd_review ' + cond ;
+
+        //console.log("query:" + queryStr);
+
+        var query = connection1.query(queryStr  ,function (err, rows, fields) 
         {
-            //db.findOne(req.dbQuery, function (err, data) {
-             //   res.json(data);    
-            //});
-        })
-        .put(function (req, res) 
+            if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+            }
+
+            //connection1.end();
+            res.json(rows);
+         });
+    })
+    .put(function (req, res, next) 
         {
-            var comment = req.body;
-            delete comment.$promise;
-            delete comment.$resolved;
+            var status = req.body;
 
-            //console.log("comment to add:" + comment);
+            console.log(status);
 
-            var updateQuery = 'INSERT INTO scd_comments (SCD_rxcui, SCD_property, SCD_reviewer, SCD_comment) VALUES (' +
-                '"'+ comment.cui[0]+'",' +
-                '"' + comment.property[0] +'",' +
-                '"' + comment.reviewer[0] + '",' +
-                '"'+ comment.cmtText[0] + '"' +
-                ') ON DUPLICATE KEY UPDATE `SCD_comment` = '+
-                '"' + comment.cmtText[0] +'"';
+            delete status.$promise;
+            delete status.$resolved;
 
-                var query = connection1.query(updateQuery  ,function (err, rows, fields) 
+            //var pcui = req.params.cui3;
+
+            if (!status)
+                return next('PUT: ReviewStatus: Supplied Status is not defined');
+
+            if (status.cui3)
+                cond = ' where SCD_rxcui = "' + status.cui3 + '" ';
+            else
+                return next('PUT: ReviewStatus:Supplied cui is not defined.');
+
+            var updateQuery = 'update scd_review set review_status = "' + status.status +'"' + cond;
+
+            var query = connection1.query(updateQuery  ,function (err, rows, fields) 
                                         {
                                             if(err){
                                                 console.log(err);
@@ -137,6 +178,81 @@ router
 
                                             res.json(rows);
                                         });
+        })
+        .delete(function (req, res) {
+            //db.delete(req.dbQuery, function () {
+              //  res.json(null);
+            //});
+        });
+
+router
+    .param('cui', function (req, res, next) {
+        //req.dbQuery = { id: parseInt(req.params.id, 10) };
+        next();
+    })
+    .route('/scdcomments/:cui')
+        .get(function (req, res, next) 
+        {
+            var cui = req.params.cui;
+
+            console.log("cui:" + cui);
+
+            var cond = '';
+            if (cui)
+                cond = ' where SCD_rxcui = "' + cui + '" ';
+            else
+                return next('GET: Comments: Supplied cui is not defined.');
+
+            //console.log("cond:" + cond);
+
+            var queryStr =  'select * from scd_comments ' + cond + ' order by SCD_updated, SCD_created DESC ';
+
+            console.log("query:" + queryStr);
+
+            var query = connection1.query(queryStr  ,function (err, rows, fields) 
+            {
+                if(err){
+                    console.log(err);
+                    return next("Mysql error, check your query");
+                }
+
+                //connection1.end();
+                console.log(rows);
+                res.json(rows);
+             });
+        })
+        .put(function (req, res, next) 
+        {
+            var comment = req.body;
+            delete comment.$promise;
+            delete comment.$resolved;
+
+            //console.log("comment to add:" + comment);
+            if (comment.cmtText[0].trim() == '')
+            {
+                console.log("Skipping.. Value is blank for '" + comment.cui[0] + "':'" + comment.property[0] + "'");
+                res.json("");
+            }
+            else
+            {
+                var updateQuery = 'INSERT INTO scd_comments (SCD_rxcui, SCD_property, SCD_reviewer, SCD_comment) VALUES (' +
+                    '"'+ comment.cui[0]+'",' +
+                    '"' + comment.property[0] +'",' +
+                    '"' + comment.reviewer[0] + '",' +
+                    '"'+ comment.cmtText[0] + '"' +
+                    ') ON DUPLICATE KEY UPDATE `SCD_comment` = '+
+                    '"' + comment.cmtText[0] +'"';
+
+                    var query = connection1.query(updateQuery  ,function (err, rows, fields) 
+                                            {
+                                                if(err){
+                                                    console.log(err);
+                                                    return next("Mysql error, check your query");
+                                                }
+
+                                                res.json(rows);
+                                            });
+            }
         })
         .delete(function (req, res) {
             //db.delete(req.dbQuery, function () {

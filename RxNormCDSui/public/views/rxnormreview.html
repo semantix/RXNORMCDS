@@ -28,7 +28,7 @@
                 <tr class="col-sm-8" ng-hide="!selection.reviewer">
                     <td><span id="counterDisp" style="color:green;font-style:italic">
                     &nbsp;&nbsp;&nbsp;Reviewing&nbsp;:&nbsp;({{cuis.ind + 1}}&nbsp;of&nbsp;{{cuis.entries.length}})&nbsp;
-                    [&nbsp;Status:&nbsp;<u>{{cuis.entries[cuis.ind]['review_status']}}</u>&nbsp;]</span></td>
+                    [&nbsp;Status:&nbsp;<u><span id="review_status" style="color:orange">{{currentReviewStatus[0].review_status}}</span></u>&nbsp;]</span></td>
                 </tr>
                 <tr>
                     <td>&nbsp;
@@ -72,7 +72,7 @@
                                                                                     data-toggle="dropdown" 
                                                                                     ng-model="selection.property"
                                                                                     onchange="changeSelectedProperty()" 
-                                                                                    style="height:220px"
+                                                                                    style="height:230px"
                                                                                     multiple>
                                                                                     <option ng-repeat="prop in propertyList" 
                                                                                     value="{{prop[1]}}">{{prop[1]}}</option>
@@ -129,7 +129,7 @@
                                                                         <span id="{{propertyList[0][1]}}" style ="color:blue" class='glyphicon glyphicon-stop' 
                                                                         onClick="setSelectedProperty(this.id, 0)"></span>
                                                                         <span id="OK{{propertyList[0][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[0][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
+                                                                        <input id="NEW{{propertyList[0][0]}}" type="hidden" value="{{commentList[0][1]}}" onchange="toggleColor(0)" ng-click="storeComment($event)"></input>
                                                                     </td>
                                                                     <td>
                                                                     <b>{{propertyList[1][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
@@ -137,7 +137,7 @@
                                                                         <span id="{{propertyList[1][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 1)"></span>
                                                                         <span id="OK{{propertyList[1][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[1][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
+                                                                        <input id="NEW{{propertyList[1][0]}}" type="hidden" value="{{commentList[1][1]}}" ng-click="storeComment($event)"></input>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -147,7 +147,7 @@
                                                                         <span id="{{propertyList[2][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 2)"></span>
                                                                         <span id="OK{{propertyList[2][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[2][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
+                                                                        <input id="NEW{{propertyList[2][0]}}" type="hidden" value="{{commentList[2][1]}}" ng-click="storeComment($event)"></input>
                                                                     </td>
                                                                     <td>
                                                                         <b>{{propertyList[3][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
@@ -155,7 +155,7 @@
                                                                         <span id="{{propertyList[3][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 3)"></span>
                                                                         <span id="OK{{propertyList[3][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[3][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
+                                                                        <input id="NEW{{propertyList[3][0]}}" type="hidden" value="{{commentList[3][1]}}" ng-click="storeComment($event)"></input>
                                                                     </td>
                                                                 </tr>
                                                                 <tr><td><h4><span class="label label-default">Administration</span></h4></td></tr>
@@ -166,7 +166,7 @@
                                                                         <span id="{{propertyList[4][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 4)"></span>
                                                                         <span id="OK{{propertyList[4][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[4][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
+                                                                        <input id="NEW{{propertyList[4][0]}}" type="hidden" value="{{commentList[4][1]}}" ng-click="storeComment($event)"></input>
                                                                     </td>
                                                                     <td>
                                                                         <b>{{propertyList[5][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
@@ -174,7 +174,7 @@
                                                                         <span id="{{propertyList[5][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 5)"></span>
                                                                         <span id="OK{{propertyList[5][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[5][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
+                                                                        <input id="NEW{{propertyList[5][0]}}" type="hidden" value="{{commentList[5][1]}}" ng-click="storeComment($event)"></input>
                                                                     </td>
                                                                 </tr>
                                                                 <tr><td><h4><span class="label label-default">Delivery Device</span></h4></td></tr>
@@ -185,27 +185,33 @@
                                                                         <span id="{{propertyList[6][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 6)"></span>
                                                                         <span id="OK{{propertyList[6][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[6][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
+                                                                        <input id="NEW{{propertyList[6][0]}}" type="hidden" value="{{commentList[6][1]}}" ng-click="storeComment($event)"></input>
                                                                     </td>
+                                                                    <td>
+                                                                        <b>{{propertyList[9][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                        {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
+                                                                        <span id="{{propertyList[9][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                                        onClick="setSelectedProperty(this.id, 9)"></span>
+                                                                        <span id="OK{{propertyList[9][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
+                                                                        <input id="NEW{{propertyList[9][0]}}" type="hidden" value="{{commentList[9][1]}}" ng-click="storeComment($event)"></input>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
                                                                     <td>
                                                                         <b>{{propertyList[7][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
                                                                         {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[7][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 7)"></span>
                                                                         <span id="OK{{propertyList[7][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[7][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td></td>
+                                                                        <input id="NEW{{propertyList[7][0]}}" type="hidden" value="{{commentList[7][1]}}" ng-click="storeComment($event)"></input></td>
                                                                     <td>
                                                                         <b>{{propertyList[8][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
                                                                         {{proposed[0]['NEWDF_rxt']}}-{{cuis.entries[cuis.ind]['SCD_rxcui']}}
                                                                         <span id="{{propertyList[8][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
                                                                         onClick="setSelectedProperty(this.id, 8)"></span>
                                                                         <span id="OK{{propertyList[8][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok' ></span>
-                                                                        <input id="NEW{{propertyList[8][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
-                                                                        <input id="NEW{{propertyList[9][0]}}" type="hidden" value="" ng-click="storeComment($event)"></input>
+                                                                        <input id="NEW{{propertyList[8][0]}}" type="hidden" value="{{commentList[8][1]}}" ng-click="storeComment($event)"></input>
+                                                                        <input id="NEW{{propertyList[10][0]}}" type="hidden" value="{{commentList[10][1]}}" ng-click="storeComment($event)"></input>
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -220,9 +226,10 @@
                                                             <table>
                                                                 <tr>
                                                                     <td class="col-sm-4"></td>
-                                                                    <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary" onclick="resetOK()" ng-click="getPrev();" ng-disabled="(cuis.ind == 0)">Previous</button></td>
-                                                                    <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success" onclick="setOK()">Review Done!</button></td>
-                                                                    <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary" onclick="resetOK()" ng-click="getNext($event, cuis.entries[cuis.ind]['SCD_rxcui']);">SKIP & Next</button></td>
+                                                                    <input id="okButtonTitle" type="hidden" value="{{reviewButtonText}}"></input>
+                                                                    <td class="col-sm-1"><button id="prevButton" name="prevButtonName" class="btn btn-primary" onclick="resetOK()" ng-click="getPrev(currentReviewStatus[0].review_status);" ng-disabled="(cuis.ind == 0)">Previous</button></td>
+                                                                    <td class="col-sm-1"><button id="okButton" name="okButtonName" class="btn btn-success" style="{{reviewButtonColor}}" onclick="setOK()" ng-disabled="(currentReviewStatus[0].review_status == 'Complete')">{{reviewButtonText}}</button></td>
+                                                                    <td class="col-sm-1"><button id="nextButton" name="nextButtonName" class="btn btn-primary" onclick="resetOK()" ng-click="getNext($event, cuis.entries[cuis.ind]['SCD_rxcui'], currentReviewStatus[0].review_status);">SKIP & Next</button></td>
                                                                     <td class="col-sm-4"></td>
                                                                 </tr>
                                                             </table>
