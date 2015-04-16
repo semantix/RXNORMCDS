@@ -14,6 +14,31 @@ angular.module('RxNormReport')
 							[8,'Delivery Device: ER Time'],
 							[9,'General Comments']];
 
+	$scope.commentList = [[0,''],
+							[1,''],
+							[2,''],
+							[3,''],
+							[4,''],
+							[5,''],
+							[6,''],
+							[7,''],
+							[8,''],
+							[9,'']];
+
+	$scope.initComments = function (event, ccui) 
+	{
+		for (var i = 0; i < $scope.commentList.length; i++) 
+		{
+			$scope.commentList[i][1] = '';
+		};
+	};
+
+	$scope.storeComment = function (event) 
+	{
+   		var index = event.target.getAttribute('id').split('NEW')[1];
+    	$scope.commentList[index][1] = event.target.getAttribute('value');
+    };
+
 	$scope.updateComment = function (event, ccui) 
 	{
 		console.log("Reviwer:" + $scope.selection.reviewer);
@@ -23,22 +48,7 @@ angular.module('RxNormReport')
     	console.log("index=" + index);
     	console.log("Property=" + $scope.propertyList[index][1]);
 
-    	$scope.comment = new Comment(
-    	{
-    		reviewer: [$scope.selection.reviewer, 'text'],
-    		cmtText : [event.target.getAttribute('value'), 'text'],
-    		property : [$scope.propertyList[index][1], 'text'],
-    		cui : [ccui, 'text']
-    	});
-
-    	if ($scope.comment.$invalid) 
-    	{
-            $scope.$broadcast('record:invalid');
-        } 
-        else 
-        {
-            $scope.comment.$save();
-        }
+    	
 	};
 
 	var allDrugs = allDrugs.query();
@@ -50,6 +60,7 @@ angular.module('RxNormReport')
    	};
 
 	$scope.cuis = drug;
+	//$scope.nextButtonTitle = "SKIP & Next";
 
 	$scope.initializeValues = function(ci)
 	{
@@ -71,7 +82,32 @@ angular.module('RxNormReport')
 		$scope.proposed = proposedValues.query({cui2:cuiValue2});
 	};
 
-   	$scope.getNext = function() {
+   	$scope.getNext = function(event, ccui) 
+   	{
+   		var currentTitle = event.target.innerHTML;
+
+   		if ((currentTitle)&&(currentTitle.indexOf('SAVE') !== -1))
+   		{
+   			for (var i = 0; i < $scope.commentList.length; i++) 
+			{
+	   			$scope.comment = new Comment(
+	    		{
+	    			reviewer: [$scope.selection.reviewer, 'text'],
+	    			cmtText : [$scope.commentList[i][1], 'text'],
+	    			property : [$scope.propertyList[i][1], 'text'],
+	    			cui : [ccui, 'text']
+	    		});
+
+	    		if ($scope.comment.$invalid) 
+	    		{
+	            	$scope.$broadcast('record:invalid');
+	        	} 
+	       		else 
+	        	{
+	            	$scope.comment.$save();
+	        	}
+	   		};
+   		}
 
 		var nxtI = parseInt(drug.ind) + 1;
 
@@ -83,7 +119,8 @@ angular.module('RxNormReport')
 		drug.ind = nxtI;
 		$scope.getExisting(drug.entries[nxtI]['SCD_rxcui']);
 		$scope.getProposed(drug.entries[nxtI]['SCD_rxcui']);
-		$scope.nextButtonTitle = "SKIP & Next";
+		event.target.innerHTML = "SKIP & Next";
+		$scope.initComments();
    	};
 
    	$scope.getPrev = function() {
@@ -98,7 +135,8 @@ angular.module('RxNormReport')
 		drug.ind = nxtI;
 		$scope.getExisting(drug.entries[nxtI]['SCD_rxcui']);
 		$scope.getProposed(drug.entries[nxtI]['SCD_rxcui']);
-		$scope.nextButtonTitle = "SKIP & Next";
+		//$scope.nextButtonTitle = "SKIP & Next";
+		$scope.initComments();
    	};   	
 })
 .controller('RxNormList', function ($scope, MyList, $location) {

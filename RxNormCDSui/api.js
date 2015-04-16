@@ -118,13 +118,15 @@ router
             delete comment.$promise;
             delete comment.$resolved;
 
+            //console.log("comment to add:" + comment);
+
             var updateQuery = 'INSERT INTO scd_comments (SCD_rxcui, SCD_property, SCD_reviewer, SCD_comment) VALUES (' +
-                '"1000001"' + ',' +
-                '"Dose Form: Drug Form"' + ',' +
-                '"Kelly DB"'+ ',' +
-                '"testComment from program"' +
+                '"'+ comment.cui[0]+'",' +
+                '"' + comment.property[0] +'",' +
+                '"' + comment.reviewer[0] + '",' +
+                '"'+ comment.cmtText[0] + '"' +
                 ') ON DUPLICATE KEY UPDATE `SCD_comment` = '+
-                '"testComment4 from program"';
+                '"' + comment.cmtText[0] +'"';
 
                 var query = connection1.query(updateQuery  ,function (err, rows, fields) 
                                         {

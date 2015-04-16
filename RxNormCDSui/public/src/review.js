@@ -104,7 +104,6 @@ function resetOK()
 		buttn.classList.remove('btn-warning');
 		buttn.innerHTML = "Review Done!";
 			
-		nxtbuttn.innerHTML = "SKIP & Next >>";
 		document.getElementById("currentComment").disabled = false;
 		document.getElementById("selectedProperty").disabled = false;
 		document.getElementById("addCommentButton").disabled = false;
@@ -125,7 +124,7 @@ function setOK()
 			buttn.classList.remove('btn-warning');
 			buttn.innerHTML = "Review Done!";
 			elem.style.visibility = "hidden";
-			nxtbuttn.innerHTML = "SKIP & Next >>";
+			nxtbuttn.innerHTML = "SKIP & Next";
 			document.getElementById("currentComment").disabled = false;
 			document.getElementById("selectedProperty").disabled = false;
 			document.getElementById("addCommentButton").disabled = false;
@@ -136,7 +135,7 @@ function setOK()
 			buttn.classList.add('btn-warning');
 			buttn.innerHTML = "Review Again";
 			elem.style.visibility = 'visible';
-			nxtbuttn.innerHTML = "Save & Next >>";
+			nxtbuttn.innerHTML = "SAVE & Next";
 			document.getElementById("currentComment").value = '';
 			document.getElementById("currentComment").disabled = true;
 			document.getElementById("selectedProperty").disabled = true;
@@ -160,10 +159,13 @@ function addComment()
 			{
 				var elemIndicator = document.getElementById(currentPropertyIndex);
 
-				if (textareaelem.value.trim() == '')
-					elemIndicator.style.color = 'blue';
-				else
-					elemIndicator.style.color = 'orange';
+				if (elemIndicator)
+				{
+					if (textareaelem.value.trim() == '')
+						elemIndicator.style.color = 'blue';
+					else
+						elemIndicator.style.color = 'orange';
+				}
 
 				var newValueHolder = document.getElementById("NEW" + i);
 				newValueHolder.value = textareaelem.value.trim();
