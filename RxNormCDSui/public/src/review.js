@@ -105,7 +105,7 @@ function resetOK()
 			
 		//buttn.classList.add('btn-success');
 		//buttn.classList.remove('btn-warning');
-		buttn.innerHTML = "REVIEW DONE!";
+		buttn.innerHTML = document.getElementById("okButtonTitle").value;
 			
 		document.getElementById("currentComment").disabled = false;
 		document.getElementById("selectedProperty").disabled = false;
@@ -113,6 +113,7 @@ function resetOK()
 	}
 
 	resetComments();
+	changeSelectedProperty();
 }
 
 function setOK()
@@ -129,7 +130,7 @@ function setOK()
 		{
 			//buttn.classList.add('btn-success');
 			//buttn.classList.remove('btn-warning');
-			buttn.innerHTML = "REVIEW DONE!";
+			buttn.innerHTML = document.getElementById("okButtonTitle").value;
 			elem.style.visibility = "hidden";
 			nxtbuttn.innerHTML = "SKIP & Next";
 			document.getElementById("currentComment").disabled = false;
@@ -140,7 +141,7 @@ function setOK()
 		{
 			//buttn.classList.remove('btn-success');
 			//buttn.classList.add('btn-warning');
-			buttn.innerHTML = "REVIEW AGAIN?";
+			buttn.innerHTML = document.getElementById("okButtonTitle").value;
 			elem.style.visibility = 'visible';
 			nxtbuttn.innerHTML = "SAVE & Next";
 			document.getElementById("currentComment").value = '';
