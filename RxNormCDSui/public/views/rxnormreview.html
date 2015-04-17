@@ -71,7 +71,8 @@
                                                                                     class="dropdown-toggle" 
                                                                                     data-toggle="dropdown" 
                                                                                     ng-model="selection.property"
-                                                                                    onchange="changeSelectedProperty()" 
+                                                                                    onchange="changeSelectedProperty()"
+                                                                                    ng-disabled="(currentReviewStatus[0].review_status == 'Complete')" 
                                                                                     style="height:230px"
                                                                                     multiple>
                                                                                     <option ng-repeat="prop in propertyList" 
@@ -85,7 +86,7 @@
                                                                     <td ><textarea id="currentComment" ng-model="newComemnt" style="hieght:100%" class="form-control col-xs-12" ng-disabled="!selection.property"></textarea></td>
                                                                 </tr>
                                                                 <tr><td>&nbsp;</td></tr>
-                                                                <tr><td class="col-sm-1"><button id="addCommentButton" name="okButtonName" class="btn btn-success" onclick="addComment()" ng-disabled="!selection.property">Update</button></td>
+                                                                <tr><td class="col-sm-1"><button id="addCommentButton" name="okButtonName" class="btn btn-success" onclick="addComment()" ng-disabled="(!selection.property)||(currentReviewStatus[0].review_status == 'Complete')">Update</button></td>
                                                                 </tr>
                                                             </table>
                                                         </div>

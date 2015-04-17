@@ -167,10 +167,20 @@ angular.module('RxNormReport')
 	   		{
 	   			for (var i = 0; i < $scope.commentList.length; i++) 
 				{
+					$scope.comment = null;
+
+					// If general comments are emtpy then put something in it.
+					var ctext = $scope.commentList[i][1];
+
+					if ((i == 10)&&(ctext.trim() == ''))
+					{
+						ctext = 'REVIEW DONE!';
+					}
+
 		   			$scope.comment = new Comment(
 		    		{
 		    			reviewer: [$scope.selection.reviewer, 'text'],
-		    			cmtText : [$scope.commentList[i][1], 'text'],
+		    			cmtText : [ctext, 'text'],
 		    			property : [$scope.propertyList[i][1], 'text'],
 		    			cui : [ccui, 'text']
 		    		});
