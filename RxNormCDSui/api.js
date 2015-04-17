@@ -23,7 +23,7 @@ router
         var queryStr = 'select a.SCD_rxcui, a.review_status, b.DF_str ' +
                           ' from scd_review a, scd_df b ' +
                           ' where a.SCD_rxcui = b.SCD_rxcui and ' +
-                          ' a.review_status = "Incomplete" ' +
+                          ' a.review_status != "Complete" ' +
                           ' order by a.review_priority, a.SCD_rxcui limit 5';
 
         var query = connection1.query(queryStr  ,function (err, rows, fields) 
@@ -152,7 +152,7 @@ router
         {
             var status = req.body;
 
-            console.log(status);
+            //console.log(status);
 
             delete status.$promise;
             delete status.$resolved;
@@ -230,7 +230,7 @@ router
             //console.log("comment to add:" + comment);
             if (comment.cmtText[0].trim() == '')
             {
-                console.log("Skipping.. Value is blank for '" + comment.cui[0] + "':'" + comment.property[0] + "'");
+                //console.log("Skipping.. Value is blank for '" + comment.cui[0] + "':'" + comment.property[0] + "'");
                 res.json("");
             }
             else
