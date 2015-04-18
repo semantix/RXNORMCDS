@@ -65,18 +65,10 @@ router
         //req.dbQuery = { id: parseInt(req.params.id, 10) };
         next();
     })
-    .route('/scdproposed/:df/:route/:ndf')
+    .route('/terms')
     .get(function (req, res, next) 
     {
-        var pdf = req.params.df;
-        var proute = req.params.route;
-        var pndf = req.params.ndf;
-
-        //console.log("Dose Form:" + pdf);
-        //console.log("Route:" + proute);
-        //console.log("New Dose Form:" + pndf);
-
-        var queryStr = ' select * from mappings limit 10';
+        var queryStr = ' select * from terms';
 
         var query = connection1.query(queryStr  ,function (err, rows, fields) 
         {

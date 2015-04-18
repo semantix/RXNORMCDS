@@ -1,5 +1,5 @@
 angular.module('RxNormReport')
-.controller('RxNormReview', function ($scope, allDrugs, existingAndProposedValues, Comment, ReviewStatus, $location) {
+.controller('RxNormReview', function ($scope, allDrugs, existingAndProposedValues, Comment, Terms, ReviewStatus, $location) {
 	$scope.mainReviewers = ['Kelly K. Wix', 'Robert R. Freimuth', 'Stacy J. Ellingson'];
 	$scope.guestReviewers = ['Guest Reviewer'];
 
@@ -31,6 +31,40 @@ angular.module('RxNormReport')
 	$scope.reviewButtonColor = "color:black";
 
 	$scope.skippedComments = [];
+
+	$scope.terms = Terms.query();
+
+	$scope.getBreadcrumbs = function(ind, termname)
+	{
+		var parentId = 0;
+		var term = '';
+
+		for (var i=0; i < $scope.terms.length; i++)
+		{
+			if (parseInt(ind) == -1)
+			{
+				if ($scope.terms[i]['name'] == termname)
+				{
+					parentId = $scope.terms[i]['parent_id'];
+					term = $scope.terms[i]['name'];
+				}
+			}
+			else
+			{
+				if ($scope.terms[i]['id'] == ind)
+				{
+					parentId = $scope.terms[i]['parent_id'];
+					term = $scope.terms[i]['name'];
+				}
+			}
+		}
+	
+		if (parseInt(parentId) == 0)
+			return term;
+		else
+			return $scope.getBreadcrumbs(parentId, term) + ' > ' + term;
+
+	}
 
 	function skippedComment(pcui, pprop, pcmt){
 		this.skpcui = pcui;
