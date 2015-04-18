@@ -1,5 +1,5 @@
 angular.module('RxNormReport')
-.controller('RxNormReview', function ($scope, allDrugs, existingValues, proposedValues, Comment, ReviewStatus, $location) {
+.controller('RxNormReview', function ($scope, allDrugs, existingAndProposedValues, Comment, ReviewStatus, $location) {
 	$scope.mainReviewers = ['Kelly K. Wix', 'Robert R. Freimuth', 'Stacy J. Ellingson'];
 	$scope.guestReviewers = ['Guest Reviewer'];
 
@@ -114,6 +114,9 @@ angular.module('RxNormReport')
     	
 	};
 
+	$scope.existing = [];
+	$scope.proposed = [];
+
 	var drugs2Review = null;
 	var drug = null;
 
@@ -134,8 +137,7 @@ angular.module('RxNormReport')
 
 	$scope.initializeValues = function(ci)
 	{
-		$scope.getExisting($scope.cuis.entries[ci]['SCD_rxcui']);
-		$scope.getProposed($scope.cuis.entries[ci]['SCD_rxcui']);
+		$scope.getExistingAndProposedValues($scope.cuis.entries[ci]['SCD_rxcui']);
 
 		if (($scope.cuis) && ($scope.cuis.entries.length > 0))
 			$scope.currentReviewStatus = ReviewStatus.query({cui3: $scope.cuis.entries[ci]['SCD_rxcui']});
@@ -143,18 +145,12 @@ angular.module('RxNormReport')
 			$scope.currentReviewStatus = "No Record Found for Review";
 	};
 
-	$scope.getExisting = function(cuiValue1) 
+	$scope.getExistingAndProposedValues = function(cuiValue1) 
 	{
 		//console.log("This was called for existing values");
-		$scope.existing = existingValues.query({cui1:cuiValue1});
+		$scope.existing = existingAndProposedValues.query({cui1:cuiValue1});
 	};
    	
-   	$scope.getProposed = function(cuiValue2) 
-	{
-		//console.log("This was called for proposed values");
-		$scope.proposed = proposedValues.query({cui2:cuiValue2});
-	};
-
    	$scope.getNext = function(event, ccui, currStat) 
    	{
    		var currentTitle = event.target.innerHTML;
@@ -224,8 +220,7 @@ angular.module('RxNormReport')
 		}
 
 		$scope.cuis.ind = nxtI;
-		$scope.getExisting($scope.cuis.entries[nxtI]['SCD_rxcui']);
-		$scope.getProposed($scope.cuis.entries[nxtI]['SCD_rxcui']);
+		$scope.getExistingAndProposedValues($scope.cuis.entries[nxtI]['SCD_rxcui']);
 		event.target.innerHTML = "SKIP & Next";
 		$scope.currentReviewStatus = ReviewStatus.query({cui3: $scope.cuis.entries[nxtI]['SCD_rxcui']});
 
@@ -276,8 +271,7 @@ angular.module('RxNormReport')
 		}
 
 		$scope.cuis.ind = nxtI;
-		$scope.getExisting($scope.cuis.entries[nxtI]['SCD_rxcui']);
-		$scope.getProposed($scope.cuis.entries[nxtI]['SCD_rxcui']);
+		$scope.getExistingAndProposedValues($scope.cuis.entries[nxtI]['SCD_rxcui']);
 		$scope.currentReviewStatus = ReviewStatus.query({cui3: $scope.cuis.entries[nxtI]['SCD_rxcui']});
 
 		if ($scope.currentReviewStatus == "Complete")
@@ -292,7 +286,12 @@ angular.module('RxNormReport')
 		}
 
 		$scope.initComments();
-   	};   	
+   	}; 
+
+   	$scope.showConflict = function (bval)
+   	{
+   		return (bval == true);
+   	}; 	
 })
 .controller('RxNormList', function ($scope, MyList, $location) {
 	$scope.list1 = MyList.query();

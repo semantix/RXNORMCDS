@@ -9,12 +9,12 @@ angular.module('RxNormReport')
 }).factory('allDrugs', function ($resource){
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
 	return $resource('/api/scds');
-}).factory('existingValues', function ($resource){
+}).factory('existingAndProposedValues', function ($resource){
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
 	return $resource('/api/scd/:cui1', {cui1 : '@cui1'});
 }).factory('proposedValues', function ($resource){
-	//console.log('factory DEEPAKDEEPAKDEEPAK');
-	return $resource('/api/scdproposed/:cui2', {cui2 : '@cui2'});
+	//NOT USED FOR NOW;
+	return $resource('/api/scdproposed/:df/:route/:ndf', {df : '@df', route : '@route', ndf : '@ndf'});
 }).factory('Comment', function ($resource){
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
 	return $resource('/api/scdcomments/:cui', {cui : '@cui'}, {
