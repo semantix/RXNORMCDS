@@ -394,13 +394,14 @@ router
             }
             else
             {
-                var updateQuery = 'INSERT INTO scd_comments (SCD_rxcui, SCD_property, SCD_reviewer, SCD_comment) VALUES (' +
+                var updateQuery = 'INSERT INTO scd_comments (SCD_rxcui, SCD_property, SCD_reviewer, SCD_comment, SCD_created) VALUES (' +
                     '"'+ comment.cui[0]+'",' +
                     '"' + comment.property[0] +'",' +
                     '"' + comment.reviewer[0] + '",' +
-                    '"'+ comment.cmtText[0] + '"' +
+                    '"'+ comment.cmtText[0] + '",' +
+                    ' NOW() ' +
                     ') ON DUPLICATE KEY UPDATE `SCD_comment` = '+
-                    '"' + comment.cmtText[0] +'"';
+                    '"' + comment.cmtText[0] +'", SCD_updated = NOW() ';
 
                     var query = connection1.query(updateQuery  ,function (err, rows, fields) 
                                             {
