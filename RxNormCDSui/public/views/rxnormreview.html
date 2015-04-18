@@ -59,11 +59,12 @@
                                                         </div>
                                                         <div class="panel-body">
                                                             <table>
-                                                                <tr>
-                                                                    <td><h4>Reviewer:&nbsp;&nbsp;<b><span id="currentReviewer"></span></b></h4></td>
+                                                                <tr width="100%">
+                                                                    <td width="2%"><span id="{{propertyList[10][1]}}" style ="color:blue" class='glyphicon glyphicon-stop'
+                                                            onClick="setSelectedProperty(this.id, 10)"></span></td><td width="98%"><h4>&nbsp;&nbsp;Reviewer:&nbsp;&nbsp;<b><span id="currentReviewer"></span></b></h4></td>
                                                                 </tr> 
                                                                 <tr>
-                                                                    <td>
+                                                                    <td colspan="2">
                                                                         <div class="control-group">
                                                                             <label class="control-label" for="reviewers">Please add comments for </label>
                                                                             <select id="selectedProperty" 
@@ -72,7 +73,7 @@
                                                                                     data-toggle="dropdown" 
                                                                                     ng-model="selection.property"
                                                                                     onchange="changeSelectedProperty()"
-                                                                                    ng-disabled="(currentReviewStatus[0].review_status == 'Complete')" 
+                                                                                    ng-disabled="(currentReviewStatus[0].review_status == 'Complete')"
                                                                                     style="height:230px"
                                                                                     multiple>
                                                                                     <option ng-repeat="prop in propertyList" 
@@ -81,12 +82,12 @@
                                                                         </div>
                                                                     </td>
                                                                 </tr>
-                                                                <tr><td>&nbsp;</td></tr>
+                                                                <tr><td colspan="2">&nbsp;</td></tr>
                                                                 <tr>
-                                                                    <td ><textarea id="currentComment" ng-model="newComemnt" style="hieght:100%" class="form-control col-xs-12" ng-disabled="!selection.property"></textarea></td>
+                                                                    <td colspan="2"><textarea id="currentComment" ng-model="newComemnt" style="hieght:100%" class="form-control col-xs-12" ng-disabled="!selection.property"></textarea></td>
                                                                 </tr>
-                                                                <tr><td>&nbsp;</td></tr>
-                                                                <tr><td class="col-sm-1"><button id="addCommentButton" name="okButtonName" class="btn btn-success" onclick="addComment()" ng-disabled="(!selection.property)||(currentReviewStatus[0].review_status == 'Complete')">Update</button></td>
+                                                                <tr><td colspan="2">&nbsp;</td></tr>
+                                                                <tr><td colspan="2"><button id="addCommentButton" name="okButtonName" class="btn btn-success" onclick="addComment()" ng-disabled="(!selection.property)||(currentReviewStatus[0].review_status == 'Complete')">Update</button></td>
                                                                 </tr>
                                                             </table>
                                                         </div>
