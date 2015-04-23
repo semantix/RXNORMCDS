@@ -23,8 +23,8 @@ router
         var queryStr = 'select a.SCD_rxcui, a.review_status, b.DF_str ' +
                           ' from scd_review a, scd_df b ' +
                           ' where a.SCD_rxcui = b.SCD_rxcui and ' +
-                          ' a.review_status != "Complete" and' +
-                          ' a.review_status != "Conflict" ' +
+                          ' a.review_status = "Incomplete" and' +
+                          ' a.review_priority < 100 ' +
                           ' order by a.review_priority, a.SCD_rxcui limit 25';
 
         var query = connection1.query(queryStr  ,function (err, rows, fields) 
