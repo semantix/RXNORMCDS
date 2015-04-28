@@ -9,6 +9,9 @@ angular.module('RxNormReport')
 }).factory('allDrugs', function ($resource){
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
 	return $resource('/api/scds');
+}).factory('allDrugsExceptThese', function ($resource){
+	//console.log('factory allDrugsExceptThese');
+	return $resource('/api/scds/:cuis');
 }).factory('existingAndProposedValues', function ($resource){
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
 	return $resource('/api/scd/:cui1', {cui1 : '@cui1'});

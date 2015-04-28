@@ -6,10 +6,11 @@ var express = require('express'),
     mysql = require('mysql');
 
 var connection1 = mysql.createConnection({
-                host     : 'localhost',
-                user     : 'root',
-                password : 'admin',
-                database : 'rxnormcds',
+                host     : 'bmidev3.mayo.edu',
+                user     : 'lexgrid',
+                password : 'lexgrid',
+                database : 'rxnorm_march_2015',
+                port:3307
         });
 
 /**
@@ -62,18 +63,21 @@ exports.getClient = function () {
   return connection1;
 };
 
-
 router
     .use(bodyParser.json())
     .route('/scds')
     .get(function (req, res, next) 
     {
-        var queryStr = 'select a.SCD_rxcui, a.review_status, b.DF_str ' +
+        var cond = ' and review_priority < 100 ';
+        var queryStr = 'select a.SCD_rxcui, a.review_status, b.DF_str, ' + 
+                          ' (select count(*) from scd_review where review_status = "Incomplete" ' + cond + ') as total' +
                           ' from scd_review a, scd_df b ' +
                           ' where a.SCD_rxcui = b.SCD_rxcui and ' +
-                          ' ((a.review_status = "Incomplete")||(a.review_status = "In Progress")) and' +
+                          ' a.review_status = "Incomplete" and' +
                           ' a.review_priority < 100 ' +
-                          ' order by a.review_priority, a.SCD_rxcui limit 25';
+                          ' order by a.review_priority, a.SCD_rxcui limit 5';
+
+        //console.log("Query:\n" + queryStr);
 
         var query = connection1.query(queryStr  ,function (err, rows, fields) 
         {
@@ -131,6 +135,62 @@ router
     });
 
 router
+    .param('cuis', function (req, res, next) {
+        //req.dbQuery = { id: parseInt(req.params.id, 10) };
+        next();
+    })
+    .route('/scds/:cuis')
+    .get(function (req, res, next) 
+    {
+        var cuis = req.params.cuis;
+        var cond1 = '';
+        var cond2 = '';
+        var cond3 = ' and review_priority < 100 ';
+        if (cuis)
+        {
+            cond1 = ' and a.SCD_rxcui not in (' + cuis + ')';
+            cond2 = ' and SCD_rxcui not in (' + cuis + ')';
+        }
+
+        //console.log("cond1:\n" + cond1);
+
+        var queryStr = 'select a.SCD_rxcui, a.review_status, b.DF_str, ' + 
+                          ' (select count(*) from scd_review where review_status = "Incomplete" ' + cond3 + cond2 +') as total' +
+                          ' from scd_review a, scd_df b ' +
+                          ' where a.SCD_rxcui = b.SCD_rxcui and ' +
+                          ' a.review_status = "Incomplete" and' +
+                          ' a.review_priority < 100 ' +
+                          cond1 +
+                          ' order by a.review_priority, a.SCD_rxcui limit 5';
+
+        //console.log("Query for filtering:\n" + queryStr);
+
+        var query = connection1.query(queryStr  ,function (err, rows, fields) 
+        {
+            if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+            }
+            else
+            {
+                for (var i=0; i < rows.length;i++)
+                {
+                    var uq = 'update scd_review set review_status = "In Progress" where SCD_rxcui = "' + rows[i].SCD_rxcui + '"';
+                    var qr = connection1.query(uq, function (err, rows2, fields)
+                    {
+                        if(err){
+                                    console.log(err);
+                                    return next("Mysql error in update, check your query");
+                                }
+                    }); 
+                }
+            }
+
+            res.json(rows);
+         });
+    });
+
+router
     .param('cui1', function (req, res, next) {
         //req.dbQuery = { id: parseInt(req.params.id, 10) };
         next();
@@ -146,9 +206,10 @@ router
         var queryStr =  ' select scd_df.SCD_rxcui, scd_df.SCD_str, scd_df.DF_rxcui, scd_df.DF_str, ' +
                 '        scd_rxterms.ROUTE_rxt, scd_rxterms.NEWDF_rxt ' +
                 ' from scd_df ' +
-                ' join scd_rxterms on ( scd_df.SCD_rxcui = scd_rxterms.SCD_rxcui ) ' +
+                ' left join scd_rxterms on ( scd_df.SCD_rxcui = scd_rxterms.SCD_rxcui ) ' +
                 cond ;
 
+        //console.log("Query for selected CUI:\n" + queryStr);
         var query = connection1.query(queryStr  ,function (err, rows, fields) 
         {
             if(err){
@@ -402,7 +463,7 @@ router
         {
             var cui = req.params.cui;
 
-            console.log("cui:" + cui);
+            //console.log("cui:" + cui);
 
             var cond = '';
             if (cui)

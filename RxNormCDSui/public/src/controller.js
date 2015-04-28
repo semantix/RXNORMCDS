@@ -1,5 +1,5 @@
 angular.module('RxNormReport')
-.controller('RxNormReview', function ($scope, allDrugs, existingAndProposedValues, Comment, Terms, ReviewStatus, $location) {
+.controller('RxNormReview', function ($scope, allDrugs, allDrugsExceptThese, existingAndProposedValues, Comment, Terms, ReviewStatus, $location) {
 	$scope.mainReviewers = ['Kelly K. Wix', 'Robert R. Freimuth', 'Stacy J. Ellingson'];
 	$scope.guestReviewers = ['Guest Reviewer'];
 
@@ -27,12 +27,68 @@ angular.module('RxNormReport')
 							[9,''],
 							[10,'']];
 
+		/// $waitUntil
+		///      waits until a certain function returns true and then executes a code. checks the function periodically
+		/// parameters
+		///      check - a function that should return false or true
+		///      onComplete - a function to execute when the check function returns true
+		///      delay - time in milliseconds, specifies the time period between each check. default value is 100
+		///      timeout - time in milliseconds, specifies how long to wait and check the check function before giving up
+		function $waitUntil(check,onComplete,delay,timeout) {
+		  // if the check returns true, execute onComplete immediately
+			if (check()) {
+		    	onComplete();
+		      	return;
+		  	}
+
+		  	if (!delay) delay=100;
+
+		  	var timeoutPointer;
+		  	var intervalPointer=setInterval(function () {
+		      	if (!check()) return; // if check didn't return true, means we need another check in the next interval
+
+		      	// if the check returned true, means we're done here. clear the interval and the timeout and execute onComplete
+		      	clearInterval(intervalPointer);
+		      	if (timeoutPointer) clearTimeout(timeoutPointer);
+		      	onComplete();
+		  	},delay);
+		  	
+		  	// if after timeout milliseconds function doesn't return true, abort
+		  	if (timeout) timeoutPointer=setTimeout(function () {
+		      	clearInterval(intervalPointer);
+		  	},timeout);
+		}
+
+
 	$scope.reviewButtonText = "REVIEW DONE!";
 	$scope.reviewButtonColor = "color:black";
 
 	$scope.skippedComments = [];
 
 	$scope.terms = Terms.query();
+
+	$scope.committed = 0;
+
+	$scope.getPendingSCDs = function()
+	{
+		var scdcount = 0;
+		for (var i=0; i < $scope.cuis.entries.length; i++)
+		{
+			var currentTotal = parseInt($scope.cuis.entries[i]['total']);
+			if (scdcount == 0)
+				scdcount = currentTotal;
+
+			if (currentTotal < scdcount)
+				scdcount = currentTotal;
+
+			
+		}
+
+		//console.log("  total=  " + scdcount + " committed = " + $scope.committed);
+		scdcount = parseInt(scdcount) - parseInt($scope.committed);
+
+		return scdcount;
+	};
 
 	$scope.getBreadcrumbs = function(ind, termname)
 	{
@@ -64,7 +120,7 @@ angular.module('RxNormReport')
 		else
 			return $scope.getBreadcrumbs(parentId, term) + ' > ' + term;
 
-	}
+	};
 
 	function skippedComment(pcui, pprop, pcmt){
 		this.skpcui = pcui;
@@ -139,12 +195,12 @@ angular.module('RxNormReport')
 
 	$scope.updateComment = function (event, ccui) 
 	{
-		console.log("Reviwer:" + $scope.selection.reviewer);
-    	console.log("Comemnt:" + event.target.getAttribute('value'));
-    	console.log("id:" + event.target.getAttribute('id'));
+		//console.log("Reviwer:" + $scope.selection.reviewer);
+    	//console.log("Comemnt:" + event.target.getAttribute('value'));
+    	//console.log("id:" + event.target.getAttribute('id'));
     	var index = event.target.getAttribute('id').split('NEW')[1];
-    	console.log("index=" + index);
-    	console.log("Property=" + $scope.propertyList[index][1]);
+    	//console.log("index=" + index);
+    	//console.log("Property=" + $scope.propertyList[index][1]);
     	
 	};
 
@@ -185,8 +241,48 @@ angular.module('RxNormReport')
 		$scope.existing = existingAndProposedValues.query({cui1:cuiValue1});
 	};
    	
+   	var moreDrugsToReview;
+
    	$scope.getNext = function(event, ccui, currStat) 
    	{
+   		
+		// Reached at the end and now wants to go 
+		// beyond what is in the array
+		// time to see if more to fetch from DB
+		if ($scope.cuis.ind == ($scope.cuis.entries.length - 2))
+		{
+
+			//console.log("going call the function");
+			moreDrugsToReview = [];
+			var toIgore = '"' + $scope.cuis.entries[0]['SCD_rxcui'] + '"';
+
+			for (var y = 1; y < $scope.cuis.entries.length; y++)
+				toIgore =  toIgore + ',"' + $scope.cuis.entries[y]['SCD_rxcui'] + '"';
+
+			moreDrugsToReview = allDrugsExceptThese.query({cuis: toIgore});
+
+			$waitUntil(
+					function(){
+						if ((moreDrugsToReview)&&(moreDrugsToReview.length > 0))
+						{
+							//console.log("found=" + moreDrugsToReview.length);
+							return true;
+						}
+
+						return false;
+					},
+
+					function() {
+						if ((moreDrugsToReview)&&(moreDrugsToReview.length > 0))
+						{
+							for (var e =0; e < moreDrugsToReview.length; e++)
+								$scope.cuis.entries.push(moreDrugsToReview[e]);
+						}
+						$scope.committed = 0;
+					}
+				);
+		}
+
    		var currentTitle = event.target.innerHTML;
 
    		if (currStat != "Complete")
@@ -225,6 +321,7 @@ angular.module('RxNormReport')
 		        	}
 		   		};
 
+		  		$scope.committed = parseInt($scope.committed)+ 1;
 		   		cuistatus = "Complete";
 	   		}
 	   		
@@ -248,7 +345,7 @@ angular.module('RxNormReport')
 
 		var nxtI = parseInt($scope.cuis.ind) + 1;
 
-		if (!(nxtI < $scope.cuis.entries.length - 1))
+		if (nxtI >= $scope.cuis.entries.length)
 		{
 			nxtI = $scope.cuis.entries.length - 1;
 		}
