@@ -7,7 +7,7 @@
                     <table>
                         <tr>
                             <td>
-                                <div class="control-group">
+                                <div class="control-group" ng-show="(!selection.reviewer)&&(cuis.entries.length != 0)">
                                     <label class="control-label" for="reviewers">Reviewers:</label>
                                     <select id="reviewers" 
                                         name="reviewers" 
@@ -15,6 +15,7 @@
                                         data-toggle="dropdown" 
                                         ng-model="selection.reviewer"
                                         ng-change="initializeValues({{cuis.ind}});"
+                                        ng-disabled="cuis.entries.length == 0"
                                         onchange="changeReviewer();">
                                         <option value="">Select a reviewer</option>
                                         <option ng-repeat="mainrev in mainReviewers" 
@@ -22,7 +23,7 @@
                                         <option ng-repeat="guestrev in guestReviewers" 
                                             value="{{guestrev}}">{{guestrev}}</option>
                                     </select>
-                                    <label ng-show="!selection.reviewer" style="color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please select a reviewer to continue...</label>
+                                    <label style="color:FireBrick">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please select a reviewer to continue...</label>
                                 </div>
                             </td>
                             <td ng-hide="!selection.reviewer">
@@ -42,7 +43,7 @@
                     </table>
                 </td>
             </tr>
-            <tr><td>&nbsp;</td></tr>
+            <tr><td>&nbsp;<label ng-show="cuis.entries.length == 0" style="color:FireBrick">WARNING: No RxNorm SCD CUI found in DB for review!! Please contact The <u><a href="mailto:Freimuth.Robert@mayo.edu?subject=Request for RxNorm SCD Review Access">Administrator</a></u>. Thank You!.</label></td></tr>
             <tr ng-hide="!selection.reviewer">
                 <td class="col-sm-6">
                     <fieldset ng-disabled="!selection.reviewer">
