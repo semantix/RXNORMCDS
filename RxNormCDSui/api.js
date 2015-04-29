@@ -4,7 +4,7 @@ var express = require('express'),
 	router = express.Router(),
 	connection  = require('express-myconnection'),
     mysql = require('mysql');
-
+/*
 var connection1 = mysql.createConnection({
                 host     : 'bmidev3.mayo.edu',
                 user     : 'lexgrid',
@@ -12,7 +12,14 @@ var connection1 = mysql.createConnection({
                 database : 'rxnorm_march_2015',
                 port:3307
         });
+*/
 
+var connection1 = mysql.createConnection({
+                host     : 'localhost',
+                user     : 'root',
+                password : 'admin',
+                database : 'rxnormcds'
+        });
 
 /**
  * Setup a client to automatically replace itself if it is disconnected.

@@ -70,6 +70,22 @@ angular.module('RxNormReport')
 	$scope.terms = Terms.query();
 
 	$scope.committed = 0;
+	$scope.showHelp = false;
+	$scope.helpButtonText = "Show";
+
+	$scope.toggleHelp = function()
+	{
+		if ($scope.showHelp)
+		{
+			$scope.showHelp = false;
+			$scope.helpButtonText = "Show";
+		}
+		else
+		{
+			$scope.showHelp = true;
+			$scope.helpButtonText = "Hide";
+		}
+	};
 
 	$scope.getPendingSCDs = function()
 	{

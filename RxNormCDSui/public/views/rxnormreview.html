@@ -38,13 +38,18 @@
                                 &nbsp;&nbsp;Remaining&nbsp;:&nbsp;
                                 <b><a href="#" data-toggle="tooltip" title="Number of 'Incomplete' RxCUIs (not including ones 'In Progress' state for review)">{{getPendingSCDs()}}</a></b>
                                 </span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="helpButton" 
+                                        name="helpButtonName" 
+                                        class="btn btn-info"
+                                        title="Shows the review process help"
+                                        ng-click="toggleHelp()">{{helpButtonText}} Help</button>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
             <tr><td>&nbsp;<label ng-show="cuis.entries.length == 0" style="color:FireBrick">WARNING: No RxNorm SCD CUI found in DB for review!! Please contact The <u><a href="mailto:Freimuth.Robert@mayo.edu?subject=Request for RxNorm SCD Review Access">Administrator</a></u>. Thank You!.</label></td></tr>
-            <tr ng-hide="!selection.reviewer">
+            <tr ng-hide="(!selection.reviewer)||(showHelp)">
                 <td class="col-sm-6">
                     <fieldset ng-disabled="!selection.reviewer">
                         <table valign="top" width="100%" cellspacing="100">
@@ -59,7 +64,7 @@
                     </fieldset>
                 </td>
             </tr>
-            <tr ng-hide="!selection.reviewer">
+            <tr ng-hide="(!selection.reviewer)||(showHelp)">
                 <td class="col-sm-6">
                     <div class="panel panel-success">
                         <div class="panel-heading">
@@ -93,11 +98,11 @@
                     </div>
                 </td>
             </tr>
-            <tr ng-hide="!selection.reviewer">
+            <tr ng-hide="(!selection.reviewer)||(showHelp)">
                 <td>
                     <table>
                         <tr valign="top">
-                            <td class="col-sm-2">
+                            <td class="col-sm-4">
                                 <table>
                                     <tr>
                                         <td>
@@ -375,6 +380,55 @@
                                         </table>
                                     </div>
                                 </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr ng-hide="!showHelp">
+                <td>
+                    <table border="2">
+                        <tr>
+                            <td>
+                                <ul>
+                                    <li>Identify yourself by selecting the name from "Reviewers" drop down list.
+                                    <p> if you do not see your name, either select "Guest Reviewer"</p>
+                                    <p>or contact the <u><a href="mailto:Freimuth.Robert@mayo.edu?subject=Request for reviewer addition">administrator</a></u>.</p></li>
+                                    <li>Please see below to identify UI components and thier roles in review process:</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr bgcolor="FireBrick" style="color:white"><td>User Interface Help - Section 1</td></tr>
+                        <tr>
+                            <td>
+                                <p>
+                                <img src="../images/slide1.png" alt="help image to show UI components and thier roles.">
+                                </p>
+                            </td>
+                        </tr>
+                        <tr bgcolor="FireBrick" style="color:white"><td>User Interface Help - Section 2</td></tr>
+                        <tr>
+                            <td>
+                                <p>
+                                <img src="../images/slide2.png" alt="help image to show UI components and thier roles.">
+                                </p>
+                            </td>
+                        </tr>
+                        <tr bgcolor="FireBrick" style="color:white"><td>User Interface Help - Section 3</td></tr>
+                        <tr>
+                            <td>
+                                <p>
+                                <img src="../images/slide3.png" alt="help image to show UI components and thier roles.">
+                                </p>
+                            </td>
+                        </tr>
+                        <tr bgcolor="FireBrick" style="color:white"><td>User Interface Help - Section 4</td></tr>
+                        <tr>
+                            <td>
+                                The following screen is displayed in absence of any drug record (to get reviewed).
+                                <p>
+                                <img src="../images/slide4.png" alt="help image to show UI components and thier roles.">
+                                </p>
                             </td>
                         </tr>
                     </table>
