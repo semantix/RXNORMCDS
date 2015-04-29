@@ -27,6 +27,8 @@ angular.module('RxNormReport')
 							[9,''],
 							[10,'']];
 
+	$scope.allComments = [];
+
 		/// $waitUntil
 		///      waits until a certain function returns true and then executes a code. checks the function periodically
 		/// parameters
@@ -122,87 +124,56 @@ angular.module('RxNormReport')
 
 	};
 
-	function skippedComment(pcui, pprop, pcmt){
-		this.skpcui = pcui;
-		this.skproperty = pprop;
-		this.skpcomment = pcmt;
-	};
-
-	$scope.initSkippedComments = function ()
+	$scope.getColor = function (ind) 
 	{
-		for (var i=0; i < $scope.cuis.entries.length; i++)
-			for (var j=0; j < $scope.propertyList.length; j++)
-				$scope.skippedComments.push (
-					new skippedComment($scope.cuis.entries[i]['SCD_rxcui'], j, ""));
+		if ($scope.commentList[ind][1].trim() != '')
+			return "orange";
+
+		return "blue";
 	};
 
-	$scope.removeSkippedComments = function (cui)
+	$scope.initComments = function (cui) 
 	{
-		for (var i=0; i < $scope.skippedComments.length; i++)
-			if ($scope.skippedComments[i])
-				if ($scope.skippedComments[i].skpcui == cui)
-					$scope.skippedComments[i].skpcomment = '';
+		for (var u=0; u < $scope.commentList.length; u++)
+			$scope.commentList[u][1] = '';
+
+		for (var i=0; i < $scope.allComments.length; i++)
+    	{
+    		var jsonO = JSON.parse($scope.allComments[i]);
+    		if (jsonO.scd == cui)
+    			$scope.commentList[jsonO.ind][1] = jsonO.comment;
+    	}
 	};
 
-	$scope.updateSkippedComment = function (cui)
-	{
-		for (var i=0; i < $scope.skippedComments.length; i++)
-			if ($scope.skippedComments[i])
-				if (($scope.skippedComments[i].skpcui == cui)&&
-					($scope.commentList[$scope.skippedComments[i].skproperty][1] != ''))
-						$scope.skippedComments[i].skpcomment = $scope.commentList[$scope.skippedComments[i].skproperty][1];
-	};
-
-	$scope.populateFromSkippedComment = function (cui)
-	{
-		for (var i=0; i < $scope.skippedComments.length; i++)
-			if ($scope.skippedComments[i])
-				if (($scope.skippedComments[i].skpcui == cui)&&
-					($scope.skippedComments[i].skpcomment != ''))
-					 	$scope.commentList[$scope.skippedComments[i].skproperty][1] = $scope.skippedComments[i].skpcomment;
-	};
-
-	$scope.initComments = function () 
-	{
-		/* This code to retrieve the comments from scd_comments table for the
-		commented upon rxcuis, Uncomment if there is a need to dynamically 
-		compare existing comemnts with the new comments. right now there is no
-		need to compare them. User either skips commenting or saves them. Once
-		it is skipped or saved, that rxcui is saved (Incomplete or Complete) accordingly */
-		/*
-		var ccui = $scope.cuis.entries[$scope.cuis.ind]['SCD_rxcui'];
-		var existingComments = null;
-		if (ccui)
-			existingComments = Comment.query({cui:ccui});
-		*/
-
-		for (var i = 0; i < $scope.commentList.length; i++) 
-		{
-			$scope.commentList[i][1] = '';
-		};
-
-		if ($scope.skippedComments.length == 0)
-			$scope.initSkippedComments();
-		else
-			$scope.populateFromSkippedComment($scope.cuis.entries[$scope.cuis.ind]['SCD_rxcui']);
-	};
-
-	$scope.storeComment = function (event) 
+	$scope.storeComment = function (event, selectedCUI) 
 	{
    		var index = event.target.getAttribute('id').split('NEW')[1];
-    	$scope.commentList[index][1] = event.target.getAttribute('value');
-    };
+   		var comment = event.target.getAttribute('value');
+    	var found = false;
+    	//console.log("length=" + $scope.allComments.length);
+    	for (var i=0; i < $scope.allComments.length; i++)
+    	{
+    		var jsonO = JSON.parse($scope.allComments[i]);
+    		//console.log("scd1=" + jsonO.scd);
+    		//console.log("ind=" + jsonO.ind);
+    		
+    		if ((jsonO.scd == selectedCUI)&&
+    			(index == jsonO.ind))
+    		{
+    			found = true;
+    			jsonO.comment = comment;
+    			$scope.allComments[i] = JSON.stringify(jsonO);
+    		}
+    	}
 
-	$scope.updateComment = function (event, ccui) 
-	{
-		//console.log("Reviwer:" + $scope.selection.reviewer);
-    	//console.log("Comemnt:" + event.target.getAttribute('value'));
-    	//console.log("id:" + event.target.getAttribute('id'));
-    	var index = event.target.getAttribute('id').split('NEW')[1];
-    	//console.log("index=" + index);
-    	//console.log("Property=" + $scope.propertyList[index][1]);
-    	
-	};
+    	if (!found)
+    	{
+    		$scope.allComments.push('{"scd":"' + selectedCUI + '","ind":"' + index + '","comment":"' + comment + '"}'); 
+    	}
+
+    	$scope.commentList[index][1] = comment;
+    	//console.log("Result:" + $scope.allComments);
+    };
 
 	$scope.existing = [];
 	$scope.proposed = [];
@@ -291,35 +262,29 @@ angular.module('RxNormReport')
 
 	   		if ((currentTitle)&&(currentTitle.indexOf('SAVE') !== -1))
 	   		{
-	   			for (var i = 0; i < $scope.commentList.length; i++) 
-				{
-					$scope.comment = null;
+	   			for (var i=0; i < $scope.allComments.length; i++)
+    			{
+    				var jsonO = JSON.parse($scope.allComments[i]);
+    				if (jsonO.scd == ccui)
+    				{
+    					$scope.comment = new Comment(
+		    			{
+		    				reviewer: [$scope.selection.reviewer, 'text'],
+		    				cmtText : [jsonO.comment, 'text'],
+		    				property : [$scope.propertyList[jsonO.ind][1], 'text'],
+		    				cui : [ccui, 'text']
+		    			});
 
-					// If general comments are emtpy then put something in it.
-					var ctext = $scope.commentList[i][1];
-
-					if ((i == 10)&&(ctext.trim() == ''))
-					{
-						ctext = 'REVIEW DONE!';
-					}
-
-		   			$scope.comment = new Comment(
-		    		{
-		    			reviewer: [$scope.selection.reviewer, 'text'],
-		    			cmtText : [ctext, 'text'],
-		    			property : [$scope.propertyList[i][1], 'text'],
-		    			cui : [ccui, 'text']
-		    		});
-
-		    		if ($scope.comment.$invalid) 
-		    		{
-		            	$scope.$broadcast('record:invalid');
-		        	} 
-		       		else 
-		        	{
-		            	$scope.comment.$save();
-		        	}
-		   		};
+		    			if ($scope.comment.$invalid) 
+		    			{
+		            		$scope.$broadcast('record:invalid');
+		        		} 
+		       			else 
+		        		{
+		            		$scope.comment.$save();
+		        		}
+    				}
+    			}
 
 		  		$scope.committed = parseInt($scope.committed)+ 1;
 		   		cuistatus = "Complete";
@@ -340,8 +305,6 @@ angular.module('RxNormReport')
 	        	$scope.reviewComplete.$save();
 	    	}
 	    }
-
-   		$scope.updateSkippedComment(ccui);
 
 		var nxtI = parseInt($scope.cuis.ind) + 1;
 
@@ -366,7 +329,7 @@ angular.module('RxNormReport')
 			//$scope.reviewButtonColor = "color:black";
 		}
 
-		$scope.initComments();
+		$scope.initComments($scope.cuis.entries[nxtI]['SCD_rxcui']);
    	};
 
    	$scope.getPrev = function(currStat) {
@@ -390,8 +353,6 @@ angular.module('RxNormReport')
 	    	{
 	        	$scope.reviewComplete.$save();
 	    	}
-
-	   		$scope.updateSkippedComment($scope.cuis.entries[$scope.cuis.ind]['SCD_rxcui']);
 		}
 
 		var nxtI = parseInt($scope.cuis.ind) - 1;
@@ -416,7 +377,7 @@ angular.module('RxNormReport')
 			//$scope.reviewButtonColor = "color:black";
 		}
 
-		$scope.initComments();
+		$scope.initComments($scope.cuis.entries[nxtI]['SCD_rxcui']);
    	}; 
 
    	$scope.showConflict = function (bval)

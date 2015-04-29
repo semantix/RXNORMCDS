@@ -152,29 +152,6 @@ function setOK()
 	}
 }
 
-
-function toggleColor(propInd)
-{
-	if (!propInd)
-		return;
-
-	var selectedProperties = document.getElementById("selectedProperty");
-	currentPropertyIndex = selectedProperties.options[i].value;
-
-	if (currentPropertyIndex != "")
-	{
-		var elemIndicator = document.getElementById(currentPropertyIndex);
-
-		if (elemIndicator)
-		{
-			if (document.getElementById("NEW" + propInd).value.trim() == '')
-				elemIndicator.style.color = 'blue';
-			else
-				elemIndicator.style.color = 'orange';
-		}
-	}
-}
-
 function addComment()
 {
 	var selectedProperties = document.getElementById("selectedProperty");
