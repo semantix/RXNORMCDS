@@ -27,6 +27,11 @@
                                 </div>
                             </td>
                             <td ng-hide="!selection.reviewer">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="helpButton" 
+                                        name="helpButtonName" 
+                                        class="btn btn-info"
+                                        title="Shows the review process help"
+                                        ng-click="toggleHelp()">{{helpButtonText}} Help</button>&nbsp;&nbsp;
                                 <span id="counterDisp" style="color:green;font-style:italic">
                                     &nbsp;&nbsp;Record Number&nbsp;:&nbsp;
                                     <b><a href="#" data-toggle="tooltip" title="Sequence number for RxCUIs (current session)">{{cuis.ind + 1}}</a></b>&nbsp;[&nbsp;Status:&nbsp;<u><span id="review_status" style="color:orange">{{currentReviewStatus[0].review_status}}</span></u>
@@ -38,17 +43,21 @@
                                 &nbsp;&nbsp;Remaining&nbsp;:&nbsp;
                                 <b><a href="#" data-toggle="tooltip" title="Number of 'Incomplete' RxCUIs (not including ones 'In Progress' state for review)">{{getPendingSCDs()}}</a></b>
                                 </span>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="helpButton" 
-                                        name="helpButtonName" 
-                                        class="btn btn-info"
-                                        title="Shows the review process help"
-                                        ng-click="toggleHelp()">{{helpButtonText}} Help</button>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
-            <tr><td>&nbsp;<label ng-show="cuis.entries.length == 0" style="color:FireBrick">WARNING: No RxNorm SCD CUI found in DB for review!! Please contact The <u><a href="mailto:Freimuth.Robert@mayo.edu?subject=Request for RxNorm SCD Review Access">Administrator</a></u>. Thank You!.</label></td></tr>
+            <tr><td>&nbsp;<label ng-show="cuis.entries.length == 0" style="color:FireBrick">WARNING: No RxNorm Drug found for review! Please contact The <u><a href="mailto:Freimuth.Robert@mayo.edu?subject=Request for RxNorm SCD Review Access">Administrator</a></u>. Thank You!.</label>
+                <p><button id="helpButton2" 
+                                        name="helpButtonName2" 
+                                        class="btn btn-info"
+                                        title="Shows the review process help"
+                                        ng-hide="selection.reviewer"
+                                        ng-click="toggleHelp()">{{helpButtonText}} Help</button>
+                </p>
+
+            </td></tr>
             <tr ng-hide="(!selection.reviewer)||(showHelp)">
                 <td class="col-sm-6">
                     <fieldset ng-disabled="!selection.reviewer">
