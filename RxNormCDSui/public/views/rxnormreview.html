@@ -30,8 +30,8 @@
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="helpButton" 
                                         name="helpButtonName" 
                                         class="btn btn-info"
-                                        title="Shows the review process help"
-                                        ng-click="toggleHelp()">{{helpButtonText}} Help</button>&nbsp;&nbsp;
+                                        title="Shows the review process information"
+                                        ng-click="toggleHelp()">{{helpButtonText}}</button>&nbsp;&nbsp;
                                 <span id="counterDisp" style="color:green;font-style:italic">
                                     &nbsp;&nbsp;Record Number&nbsp;:&nbsp;
                                     <b><a href="#" data-toggle="tooltip" title="Sequence number for RxCUIs (current session)">{{cuis.ind + 1}}</a></b>&nbsp;[&nbsp;Status:&nbsp;<u><span id="review_status" style="color:orange">{{currentReviewStatus[0].review_status}}</span></u>
@@ -52,9 +52,9 @@
                 <p><button id="helpButton2" 
                                         name="helpButtonName2" 
                                         class="btn btn-info"
-                                        title="Shows the review process help"
+                                        title="Shows the review process information"
                                         ng-hide="selection.reviewer"
-                                        ng-click="toggleHelp()">{{helpButtonText}} Help</button>
+                                        ng-click="toggleHelp()">{{helpButtonText}}</button>
                 </p>
 
             </td></tr>

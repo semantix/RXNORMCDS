@@ -71,19 +71,19 @@ angular.module('RxNormReport')
 
 	$scope.committed = 0;
 	$scope.showHelp = false;
-	$scope.helpButtonText = "Show";
+	$scope.helpButtonText = "Show Help";
 
 	$scope.toggleHelp = function()
 	{
 		if ($scope.showHelp)
 		{
 			$scope.showHelp = false;
-			$scope.helpButtonText = "Show";
+			$scope.helpButtonText = "Show Help";
 		}
 		else
 		{
 			$scope.showHelp = true;
-			$scope.helpButtonText = "Hide";
+			$scope.helpButtonText = "Hide Help";
 		}
 	};
 
