@@ -276,7 +276,7 @@ angular.module('RxNormReport')
    		{
 	   		var cuistatus = "Incomplete";
 
-	   		if ((currentTitle)&&(currentTitle.indexOf('SAVE') !== -1))
+	   		if ((currentTitle)&&(currentTitle.indexOf('Submit') !== -1))
 	   		{
 	   			for (var i=0; i < $scope.allComments.length; i++)
     			{

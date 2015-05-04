@@ -80,25 +80,25 @@
                             <h3 class="panel-title">Exisitng&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:brown"><font size="2">{{getBreadcrumbs(-1, existing[0]['DF_str'])}}</font></span></h3>
                         </div>
                         <div class="panel-body">
-                            <table width="100%">
+                            <table>
                                 <tr>
-                                    <td width="100px">
+                                    <td width="10%">
                                         <div role="alert"><b>RxNorm DF:&nbsp;</b></div>
                                     </td>
-                                    <td width="400px">
+                                    <td width="25%">
                                         <span style="color:blue">{{existing[0]['DF_str']}}</span>
                                     </td>
-                                    <td width="100px">
-                                        <div role="alert"><b>RxTndF:&nbsp;</b></div>
+                                    <td width="15%">
+                                        <div role="alert"><b>RxTerms New DF:&nbsp;</b></div>
                                     </td>
-                                    <td width="400px">
+                                    <td width="25%">
                                         <span style="color:blue">{{existing[0]['NEWDF_rxt']}}</span>
                                     </td>
                                
-                                    <td width="100px">
-                                        <div role="alert"><b>RxTroute:&nbsp;</b></div>
+                                    <td width="15%">
+                                        <div role="alert"><b>RxTerms Route:&nbsp;</b></div>
                                     </td>
-                                    <td width="400px">
+                                    <td width="10%">
                                         <span style="color:blue">{{existing[0]['ROUTE_rxt']}}</span>
                                     </td>
                                 </tr>
@@ -117,8 +117,8 @@
                                         <td>
                                             <div class="panel panel-primary">
                                                 <div class="panel-heading">
-                                                    <h3 class="panel-title">Proposed
-                                                    <span class="label label-danger" ng-show="showConflict(existing[0]['conflict'])">[Conflicts found due to multiple proposed values]</span></h3>
+                                                    <h3 class="panel-title">Proposed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <span class="label label-danger" ng-show="showConflict(existing[0]['conflict'])">Multiple proposed values. Please suggest resolution in comment.</span></h3>
                                                 </div>
                                                 <div class="panel-body">
                                                     <table width="100%">
@@ -307,7 +307,8 @@
                                                                         name="okButtonName" 
                                                                         class="btn btn-success" 
                                                                         style="{{reviewButtonColor}}" 
-                                                                        onclick="setOK()" 
+                                                                        onclick="setOK()"
+                                                                        title="This button gets disabled, once review is submitted."
                                                                         ng-disabled="(currentReviewStatus[0].review_status == 'Complete')">{{reviewButtonText}}
                                                                 </button>
                                                             </td>
@@ -370,7 +371,7 @@
                                                                 style="height:225px;width:400px;color:black"
                                                                 title="Please type comments for selected properties here..."
                                                                 placeholder="Please type comments for selected properties here..."
-                                                                ng-disabled="!selection.property">
+                                                                ng-disabled="(!selection.property)||(currentReviewStatus[0].review_status == 'Complete')">
                                                     </textarea>
                                                 </td>
                                             </tr>

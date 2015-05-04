@@ -143,7 +143,7 @@ function setOK()
 			//buttn.classList.add('btn-warning');
 			buttn.innerHTML = document.getElementById("okButtonTitle").value;
 			elem.style.visibility = 'visible';
-			nxtbuttn.innerHTML = "SAVE & Next";
+			nxtbuttn.innerHTML = "Submit & Next";
 			document.getElementById("currentComment").value = '';
 			document.getElementById("currentComment").disabled = true;
 			document.getElementById("selectedProperty").disabled = true;
