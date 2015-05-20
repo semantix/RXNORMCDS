@@ -1,4 +1,4 @@
-angular.module('RxNormReport', ['ngRoute', 'ngResource', 'ngMessages'])
+angular.module('RxNormReport', ['ngRoute', 'ngResource', 'ngMessages', 'ngTable'])
 .config(function ($routeProvider, $locationProvider) {	
 		$routeProvider
 		.when('/', {

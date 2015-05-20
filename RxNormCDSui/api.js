@@ -5,14 +5,20 @@ var express = require('express'),
 	connection  = require('express-myconnection'),
     mysql = require('mysql');
 
-var connection1 = mysql.createConnection({
-                host     : 'bmidev3.mayo.edu',
-                user     : 'lexgrid',
-                password : 'lexgrid',
-                database : 'rxnorm_march_2015',
-                port:3307
-        });
+// var connection1 = mysql.createConnection({
+//                 host     : 'bmidev3.mayo.edu',
+//                 user     : 'lexgrid',
+//                 password : 'lexgrid',
+//                 database : 'rxnorm_march_2015',
+//                 port:3307
+//         });
 
+var connection1 = mysql.createConnection({
+                host     : 'localhost',
+                user     : 'root',
+                password : 'admin',
+                database : 'rxnormcds'
+        });
 
 /**
  * Setup a client to automatically replace itself if it is disconnected.
@@ -69,6 +75,7 @@ router
     .route('/scds')
     .get(function (req, res, next) 
     {
+        console.log("Comes in scds");
         var cond = ' and review_priority < 100 ';
         var queryStr = 'select a.SCD_rxcui, a.review_status, b.DF_str, ' + 
                           ' (select count(*) from scd_review where review_status = "Incomplete" ' + cond + ') as total' +
@@ -76,7 +83,7 @@ router
                           ' where a.SCD_rxcui = b.SCD_rxcui and ' +
                           ' a.review_status = "Incomplete" and' +
                           ' a.review_priority < 100 ' +
-                          ' order by a.review_priority, a.SCD_rxcui limit 5';
+                          ' order by a.review_priority, a.SCD_rxcui limit 1';
 
         //console.log("Query:\n" + queryStr);
 
@@ -153,7 +160,8 @@ router
             cond2 = ' and SCD_rxcui not in (' + cuis + ')';
         }
 
-        //console.log("cond1:\n" + cond1);
+        console.log("Comes in scds/cuis");
+        console.log("cond1:\n" + cond1);
 
         var queryStr = 'select a.SCD_rxcui, a.review_status, b.DF_str, ' + 
                           ' (select count(*) from scd_review where review_status = "Incomplete" ' + cond3 + cond2 +') as total' +
@@ -162,7 +170,7 @@ router
                           ' a.review_status = "Incomplete" and' +
                           ' a.review_priority < 100 ' +
                           cond1 +
-                          ' order by a.review_priority, a.SCD_rxcui limit 5';
+                          ' order by a.review_priority, a.SCD_rxcui limit 1';
 
         //console.log("Query for filtering:\n" + queryStr);
 
@@ -534,11 +542,16 @@ router
 	.use(bodyParser.json())
 	.route('/rxnormtable')
 	.get(function (req, res, next) {
-            //console.log('11111DEEPAKDEEPAKDEEPAK');
+            
 
-		//connection1.connect();
+        var statusQuery =   'select' +
+                            ' scd_comments.SCD_rxcui, scd_df.SCD_str,scd_comments.SCD_property, ' +
+                            ' scd_comments.SCD_comment, scd_comments.SCD_reviewer ' +
+                            ' from scd_comments ' +
+                            ' join scd_df ' +
+                            ' on ( scd_comments.SCD_rxcui =scd_df.SCD_rxcui )';
 
-        var query = connection1.query('show tables',function (err, rows, fields) {
+        var query = connection1.query(statusQuery,function (err, rows, fields) {
             if(err){
                 console.log(err);
                 return next("Mysql error, check your query");

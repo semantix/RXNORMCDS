@@ -73,6 +73,18 @@ angular.module('RxNormReport')
 	$scope.showHelp = false;
 	$scope.helpButtonText = "Show Help";
 
+	$scope.$on('$locationChangeStart', function( event ) {
+    	var answer = confirm("Are you sure you want to leave this page?")
+    	if (!answer) {
+        	console.log("here is the answer");
+    	}
+	});
+
+	$scope.showReport = function()
+	{
+		window.open("/rxnormtable", "_blank");
+	};
+
 	$scope.toggleHelp = function()
 	{
 		if ($scope.showHelp)
@@ -214,10 +226,10 @@ angular.module('RxNormReport')
 
 	$scope.initializeValues = function(ci)
 	{
-		$scope.getExistingAndProposedValues($scope.cuis.entries[ci]['SCD_rxcui']);
+		//$scope.getExistingAndProposedValues($scope.cuis.entries[ci]['SCD_rxcui']);
 
 		if (($scope.cuis) && ($scope.cuis.entries.length > 0))
-			$scope.currentReviewStatus = ReviewStatus.query({cui3: $scope.cuis.entries[ci]['SCD_rxcui']});
+			$scope.setNextIndex(ci);
 		else
 			$scope.currentReviewStatus = "No Record Found for Review";
 	};
@@ -233,43 +245,6 @@ angular.module('RxNormReport')
    	$scope.getNext = function(event, ccui, currStat) 
    	{
    		
-		// Reached at the end and now wants to go 
-		// beyond what is in the array
-		// time to see if more to fetch from DB
-		if ($scope.cuis.ind == ($scope.cuis.entries.length - 2))
-		{
-
-			//console.log("going call the function");
-			moreDrugsToReview = [];
-			var toIgore = '"' + $scope.cuis.entries[0]['SCD_rxcui'] + '"';
-
-			for (var y = 1; y < $scope.cuis.entries.length; y++)
-				toIgore =  toIgore + ',"' + $scope.cuis.entries[y]['SCD_rxcui'] + '"';
-
-			moreDrugsToReview = allDrugsExceptThese.query({cuis: toIgore});
-
-			$waitUntil(
-					function(){
-						if ((moreDrugsToReview)&&(moreDrugsToReview.length > 0))
-						{
-							//console.log("found=" + moreDrugsToReview.length);
-							return true;
-						}
-
-						return false;
-					},
-
-					function() {
-						if ((moreDrugsToReview)&&(moreDrugsToReview.length > 0))
-						{
-							for (var e =0; e < moreDrugsToReview.length; e++)
-								$scope.cuis.entries.push(moreDrugsToReview[e]);
-						}
-						$scope.committed = 0;
-					}
-				);
-		}
-
    		var currentTitle = event.target.innerHTML;
 
    		if (currStat != "Complete")
@@ -319,33 +294,76 @@ angular.module('RxNormReport')
 	   		else 
 	    	{
 	        	$scope.reviewComplete.$save();
+	        	$scope.cuis.entries[$scope.cuis.ind]['review_status'] = cuistatus;
 	    	}
 	    }
 
-		var nxtI = parseInt($scope.cuis.ind) + 1;
-
-		if (nxtI >= $scope.cuis.entries.length)
+		// Reached at the end and now wants to go 
+		// beyond what is in the array
+		// time to see if more to fetch from DB
+		if ($scope.cuis.ind >= ($scope.cuis.entries.length -1))
 		{
-			nxtI = $scope.cuis.entries.length - 1;
-		}
 
-		$scope.cuis.ind = nxtI;
-		$scope.getExistingAndProposedValues($scope.cuis.entries[nxtI]['SCD_rxcui']);
-		event.target.innerHTML = "SKIP & Next";
-		$scope.currentReviewStatus = ReviewStatus.query({cui3: $scope.cuis.entries[nxtI]['SCD_rxcui']});
+			//console.log("going call the function");
+			moreDrugsToReview = [];
+			var toIgore = '"' + $scope.cuis.entries[0]['SCD_rxcui'] + '"';
 
-		if ($scope.currentReviewStatus == "Complete")
-		{
-			$scope.reviewButtonText = "REVIEW AGAIN!";
-			//scope.reviewButtonColor = "color:red";
+			for (var y = 1; y < $scope.cuis.entries.length; y++)
+				toIgore =  toIgore + ',"' + $scope.cuis.entries[y]['SCD_rxcui'] + '"';
+
+			moreDrugsToReview = allDrugsExceptThese.query({cuis: toIgore});
+
+			$waitUntil(
+					function(){
+						if ((moreDrugsToReview)&&(moreDrugsToReview.length > 0))
+						{
+							//console.log("found=" + moreDrugsToReview.length);
+							return true;
+						}
+
+						return false;
+					},
+
+					function() {
+						if ((moreDrugsToReview)&&(moreDrugsToReview.length > 0))
+						{
+							for (var e =0; e < moreDrugsToReview.length; e++)
+								$scope.cuis.entries.push(moreDrugsToReview[e]);
+
+							var nxtIi = parseInt($scope.cuis.ind) + 1;
+
+			 				if (nxtIi >= $scope.cuis.entries.length)
+			 				{
+			 					nxtIi = $scope.cuis.entries.length - 1;
+			 				}
+
+			 				$scope.setNextIndex(nxtIi);
+						}
+						$scope.committed = 0;
+					}
+				);
 		}
 		else
 		{
-			$scope.reviewButtonText = "REVIEW DONE!";
-			//$scope.reviewButtonColor = "color:black";
+			var nxtI = parseInt($scope.cuis.ind) + 1;
+
+			 if (nxtI >= $scope.cuis.entries.length)
+			 {
+			 	nxtI = $scope.cuis.entries.length - 1;
+			 }
+
+			$scope.setNextIndex(nxtI);
 		}
 
-		$scope.initComments($scope.cuis.entries[nxtI]['SCD_rxcui']);
+		event.target.innerHTML = "SKIP & Next";
+   	};
+
+   	$scope.setNextIndex = function(nextIndex)
+   	{
+			$scope.cuis.ind = nextIndex;
+			$scope.getExistingAndProposedValues($scope.cuis.entries[nextIndex]['SCD_rxcui']);
+			$scope.getReviewStatus(nextIndex);
+			$scope.initComments($scope.cuis.entries[nextIndex]['SCD_rxcui']);
    	};
 
    	$scope.getPrev = function(currStat) {
@@ -368,6 +386,7 @@ angular.module('RxNormReport')
 	   		else 
 	    	{
 	        	$scope.reviewComplete.$save();
+	        	$scope.cuis.entries[$scope.cuis.ind]['review_status'] = cuistatus;
 	    	}
 		}
 
@@ -378,32 +397,57 @@ angular.module('RxNormReport')
 			nxtI = 0;
 		}
 
-		$scope.cuis.ind = nxtI;
-		$scope.getExistingAndProposedValues($scope.cuis.entries[nxtI]['SCD_rxcui']);
-		$scope.currentReviewStatus = ReviewStatus.query({cui3: $scope.cuis.entries[nxtI]['SCD_rxcui']});
-
-		if ($scope.currentReviewStatus == "Complete")
-		{
-			$scope.reviewButtonText = "REVIEW AGAIN!";
-			//$scope.reviewButtonColor = "color:red";
-		}
-		else
-		{
-			$scope.reviewButtonText = "REVIEW DONE!";
-			//$scope.reviewButtonColor = "color:black";
-		}
-
-		$scope.initComments($scope.cuis.entries[nxtI]['SCD_rxcui']);
+		$scope.setNextIndex(nxtI);
    	}; 
+
+   	$scope.getReviewStatus = function(whichIndex)
+   	{
+   		$scope.currentReviewStatus = $scope.cuis.entries[whichIndex]['review_status'];
+
+   		/*
+   		var currentStatus = ReviewStatus.query({cui3: $scope.cuis.entries[whichIndex]['SCD_rxcui']});
+
+		$waitUntil(
+			function(){
+				if (currentStatus)
+				{
+					//console.log("found=" + moreDrugsToReview.length);
+					return true;
+				}
+
+				return false;
+			},
+
+			function() 
+					{
+						if (("Incomplete" == currentStatus)||("In Progress" == currentStatus)||("Complete" == currentStatus))
+							$scope.currentReviewStatus = currentStatus;
+
+						
+					}
+				);
+		*/
+
+		// if ($scope.currentReviewStatus == "Complete")
+		// {
+		// 	$scope.reviewButtonText = "REVIEW AGAIN!";
+		// 	//$scope.reviewButtonColor = "color:red";
+		// }
+		// else
+		// {
+		// 	$scope.reviewButtonText = "REVIEW DONE!";
+		// 	//$scope.reviewButtonColor = "color:black";
+		// }	
+   	}
 
    	$scope.showConflict = function (bval)
    	{
    		return (bval == true);
    	}; 	
 })
-.controller('RxNormList', function ($scope, MyList, $location) {
-	$scope.list1 = MyList.query();
-	$scope.fields = ['Tables_in_rxnormcds'];
+.controller('RxNormList', function ($scope, MyList, $location, $filter, ngTableParams) {
+	var data = MyList.query();
+	$scope.fields = ['RxCUI', 'Name', 'Property', 'Reviewer', 'Comment'];
 
 	$scope.sort = function (field)
 	{
@@ -411,12 +455,31 @@ angular.module('RxNormReport')
 		$scope.sort.order = !$scope.sort.order;
 	};
 
-	$scope.sort.field = 'Tables_in_rxnormcds';
-	$scope.sort.order = false;
+	//$scope.sort.field = ['RxCUI', 'Name', 'Property', 'Comment', 'Reviewer'];
+	//$scope.sort.order = false;
 
-	$scope.show = function (tName) {
-		$location.url('/tdetails/' + tName);
-	};
+	$scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10,          // count per page
+	        sorting: {
+	            'SCD_rxcui':'asc'     // initial sorting
+	        }
+    	}, 
+    	{
+        	total: data.length, // length of data
+        	getData: function($defer, params) {
+            
+            var orderedData = params.sorting() ?
+                    $filter('orderBy')(data, params.orderBy()) :
+                    data;
+			params.total(orderedData.length); // length of data
+            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));         
+        }
+    });
+
+	// $scope.show = function (tName) {
+	// 	$location.url('/tdetails/' + tName);
+	// };
 })
 .controller('RxNormTableDetails', function ($scope, $routeParams, MyTableDetails, $location) {
 		//console.log(' new controller DEEPAKDEEPAKDEEPAK ' + $routeParams.tableName);

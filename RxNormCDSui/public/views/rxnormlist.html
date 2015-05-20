@@ -1,21 +1,28 @@
-<div class="row">
-	<div class='col-sm-6'>
-		<table class="table table-hover table-bordered">
-			<thead>
-				<tr>
-					<th ng-repeat='field in fields'>
-						{{ field }}
-					</th>
-				</tr>
-				</thead>
-			<tbody>
-				<tr ng-click='show(lst["Tables_in_rxnormcds"])' ng-repeat='lst in list1'>
-					<td>
-						{{lst['Tables_in_rxnormcds']}}
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class='col-sm-6'> </div>
+<div ng-controller="RxNormList">
+	<table>
+	<tr><td><h3><span class="label label-info">Review Comments</span></h3></td>
+		<td><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Page:</strong> {{tableParams.page()}}</td>
+    	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Count per page:</strong> {{tableParams.count()}}</td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+	</table>
+    <table ng-table="tableParams" class="table">
+        <tr ng-repeat="lst in $data">
+            <td data-title="'RxCUI'" sortable='"SCD_rxcui"'>
+                {{lst["SCD_rxcui"]}}
+            </td>
+            <td data-title="'Name'" sortable='"SCD_str"'>
+                {{lst["SCD_str"]}}
+            </td>
+            <td data-title="'Property'" sortable='"SCD_property"'>
+                {{lst["SCD_property"]}}
+            </td>
+            <td data-title="'Reviewer'" sortable='"SCD_reviewer"'>
+                {{lst["SCD_reviewer"]}}
+            </td>
+            <td data-title="'Comment'" sortable='"SCD_comment"'>
+                {{lst["SCD_comment"]}}
+            </td>
+        </tr>
+    </table>
 </div>

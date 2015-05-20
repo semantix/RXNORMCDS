@@ -31,10 +31,15 @@
                                         name="helpButtonName" 
                                         class="btn btn-info"
                                         title="Shows the review process information"
-                                        ng-click="toggleHelp()">{{helpButtonText}}</button>&nbsp;&nbsp;
+                                        ng-click="toggleHelp()">{{helpButtonText}}</button>
+                                        &nbsp;&nbsp;<button id="reportButton" 
+                                        name="reportButtonName" 
+                                        class="btn btn-default"
+                                        title="Shows the review comments in a new tab"
+                                        ng-click="showReport()">Show Report</button>&nbsp;&nbsp;
                                 <span id="counterDisp" style="color:green;font-style:italic">
                                     &nbsp;&nbsp;Record Number&nbsp;:&nbsp;
-                                    <b><a href="#" data-toggle="tooltip" title="Sequence number for RxCUIs (current session)">{{cuis.ind + 1}}</a></b>&nbsp;[&nbsp;Status:&nbsp;<u><span id="review_status" style="color:orange">{{currentReviewStatus[0].review_status}}</span></u>
+                                    <b><a href="#" data-toggle="tooltip" title="Sequence number for RxCUIs (current session)">{{cuis.ind + 1}}</a></b>&nbsp;[&nbsp;Status:&nbsp;<u><span id="review_status" style="color:orange">{{currentReviewStatus}}</span></u>
                                     &nbsp;]
                                 </span>
                             </td>
@@ -297,7 +302,7 @@
                                                                         name="prevButtonName" 
                                                                         class="btn btn-primary" 
                                                                         onclick="resetOK()" 
-                                                                        ng-click="getPrev(currentReviewStatus[0].review_status);" 
+                                                                        ng-click="getPrev(currentReviewStatus);" 
                                                                         ng-disabled="(cuis.ind == 0)">Previous
                                                                 </button>
                                                             </td>
@@ -309,7 +314,7 @@
                                                                         style="{{reviewButtonColor}}" 
                                                                         onclick="setOK()"
                                                                         title="This button gets disabled, once review is submitted."
-                                                                        ng-disabled="(currentReviewStatus[0].review_status == 'Complete')">{{reviewButtonText}}
+                                                                        ng-disabled="(currentReviewStatus == 'Complete')">{{reviewButtonText}}
                                                                 </button>
                                                             </td>
                                                             <td>&nbsp;</td>
@@ -318,7 +323,7 @@
                                                                         name="nextButtonName" 
                                                                         class="btn btn-primary" 
                                                                         onclick="resetOK()" 
-                                                                        ng-click="getNext($event, cuis.entries[cuis.ind]['SCD_rxcui'], currentReviewStatus[0].review_status);">SKIP & Next
+                                                                        ng-click="getNext($event, cuis.entries[cuis.ind]['SCD_rxcui'], currentReviewStatus);">SKIP & Next
                                                                 </button>
                                                             </td>
                                                             <td>&nbsp;</td>
