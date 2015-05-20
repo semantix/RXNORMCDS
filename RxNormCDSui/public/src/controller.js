@@ -73,13 +73,6 @@ angular.module('RxNormReport')
 	$scope.showHelp = false;
 	$scope.helpButtonText = "Show Help";
 
-	$scope.$on('$locationChangeStart', function( event ) {
-    	var answer = confirm("Are you sure you want to leave this page?")
-    	if (!answer) {
-        	console.log("here is the answer");
-    	}
-	});
-
 	$scope.showReport = function()
 	{
 		window.open("/rxnormtable", "_blank");

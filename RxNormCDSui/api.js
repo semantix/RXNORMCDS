@@ -5,20 +5,20 @@ var express = require('express'),
 	connection  = require('express-myconnection'),
     mysql = require('mysql');
 
-// var connection1 = mysql.createConnection({
-//                 host     : 'bmidev3.mayo.edu',
-//                 user     : 'lexgrid',
-//                 password : 'lexgrid',
-//                 database : 'rxnorm_march_2015',
-//                 port:3307
-//         });
-
 var connection1 = mysql.createConnection({
-                host     : 'localhost',
-                user     : 'root',
-                password : 'admin',
-                database : 'rxnormcds'
+                host     : 'bmidev3.mayo.edu',
+                user     : 'lexgrid',
+                password : 'lexgrid',
+                database : 'rxnorm_march_2015',
+                port:3307
         });
+
+// var connection1 = mysql.createConnection({
+//                 host     : 'localhost',
+//                 user     : 'root',
+//                 password : 'admin',
+//                 database : 'rxnormcds'
+//         });
 
 /**
  * Setup a client to automatically replace itself if it is disconnected.
@@ -75,7 +75,7 @@ router
     .route('/scds')
     .get(function (req, res, next) 
     {
-        console.log("Comes in scds");
+        //console.log("Comes in scds");
         var cond = ' and review_priority < 100 ';
         var queryStr = 'select a.SCD_rxcui, a.review_status, b.DF_str, ' + 
                           ' (select count(*) from scd_review where review_status = "Incomplete" ' + cond + ') as total' +
@@ -160,8 +160,8 @@ router
             cond2 = ' and SCD_rxcui not in (' + cuis + ')';
         }
 
-        console.log("Comes in scds/cuis");
-        console.log("cond1:\n" + cond1);
+        //console.log("Comes in scds/cuis");
+        //console.log("cond1:\n" + cond1);
 
         var queryStr = 'select a.SCD_rxcui, a.review_status, b.DF_str, ' + 
                           ' (select count(*) from scd_review where review_status = "Incomplete" ' + cond3 + cond2 +') as total' +
