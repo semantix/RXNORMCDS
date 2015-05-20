@@ -456,17 +456,25 @@ angular.module('RxNormReport')
         count: 10,          // count per page
 	        sorting: {
 	            'SCD_rxcui':'asc'     // initial sorting
-	        }
+	        },
+	        filter: {
+                'SCD_rxcui': ''       // initial filter
+            }
     	}, 
     	{
         	total: data.length, // length of data
         	getData: function($defer, params) {
             
-            var orderedData = params.sorting() ?
-                    $filter('orderBy')(data, params.orderBy()) :
-                    data;
-			params.total(orderedData.length); // length of data
-            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));         
+            var orderedData = params.filter() ?
+                        $filter('filter')(data, params.filter()) :
+                        data;
+
+            var orderedData2 = params.sorting() ?
+                    $filter('orderBy')(orderedData, params.orderBy()) :
+                    orderedData;
+
+			params.total(orderedData2.length); // length of data
+            $defer.resolve(orderedData2.slice((params.page() - 1) * params.count(), params.page() * params.count()));         
         }
     });
 

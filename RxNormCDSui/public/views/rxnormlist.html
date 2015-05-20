@@ -6,21 +6,21 @@
     </tr>
     <tr><td>&nbsp;</td></tr>
 	</table>
-    <table ng-table="tableParams" class="table">
+    <table ng-table="tableParams" show-filter="true" class="table">
         <tr ng-repeat="lst in $data">
-            <td data-title="'RxCUI'" sortable='"SCD_rxcui"'>
+            <td data-title="'RxCUI'" sortable='"SCD_rxcui"' filter="{ 'SCD_rxcui':'text'}" style="table-layout:fixed;width:60">
                 {{lst["SCD_rxcui"]}}
             </td>
-            <td data-title="'Name'" sortable='"SCD_str"'>
-                {{lst["SCD_str"]}}
-            </td>
-            <td data-title="'Property'" sortable='"SCD_property"'>
-                {{lst["SCD_property"]}}
-            </td>
-            <td data-title="'Reviewer'" sortable='"SCD_reviewer"'>
+            <td data-title="'Reviewer'" sortable='"SCD_reviewer"' filter="{'SCD_reviewer':'text'}" style="table-layout:fixed;width:150">
                 {{lst["SCD_reviewer"]}}
             </td>
-            <td data-title="'Comment'" sortable='"SCD_comment"'>
+            <td data-title="'Property'" sortable='"SCD_property"' filter="{'SCD_property':'text'}" style="table-layout:fixed;width:250">
+                {{lst["SCD_property"]}}
+            </td>
+            <td data-title="'Name'" sortable='"SCD_str"' filter="{'SCD_str':'text'}" style="table-layout:fixed;width:250">
+                {{lst["SCD_str"]}}
+            </td>
+            <td data-title="'Comment'" sortable='"SCD_comment"' filter="{'SCD_comment':'text'}" style="table-layout:fixed;word-wrap:break-word;width:1000">
                 {{lst["SCD_comment"]}}
             </td>
         </tr>
