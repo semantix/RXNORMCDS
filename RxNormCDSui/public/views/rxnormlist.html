@@ -2,7 +2,8 @@
 	<table>
 	<tr><td><h3><span class="label label-info">Review Comments</span></h3></td>
 		<td><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Page:</strong> {{tableParams.page()}}</td>
-    	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Count per page:</strong> {{tableParams.count()}}</td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Count per page:</strong> {{tableParams.count()}}</td>
+        <td><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RxCUI Reviewed:</strong> {{totalcuis}}</td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Showing</strong>&nbsp;&nbsp;{{tableParams.total()}}&nbsp;&nbsp;<strong>Comments.</strong><i><span style="font-size:10">Total might be higher after removing filters in search boxes below</span></i></td>
     </tr>
     <tr><td>&nbsp;</td></tr>
@@ -10,7 +11,11 @@
     <table ng-table="tableParams" show-filter="true" class="table">
         <tr ng-repeat="lst in $data">
             <td data-title="'RxCUI'" sortable='"SCD_rxcui"' filter="{ 'SCD_rxcui':'text'}" style="table-layout:fixed;width:60">
-                {{lst["SCD_rxcui"]}}
+                <p><button id="helpButton2" 
+                                        name="showdetails" 
+                                        class="btn btn-info"
+                                        ng-click="showDetails($event)">{{lst["SCD_rxcui"]}}</button>
+                </p>
             </td>
             <td data-title="'Reviewer'" sortable='"SCD_reviewer"' filter="{'SCD_reviewer':'text'}" style="table-layout:fixed;width:150">
                 {{lst["SCD_reviewer"]}}

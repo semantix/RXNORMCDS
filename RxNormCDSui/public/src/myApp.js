@@ -9,6 +9,10 @@ angular.module('RxNormReport', ['ngRoute', 'ngResource', 'ngMessages', 'ngTable'
 			controller: 'RxNormList',
 			templateUrl: 'views/rxnormlist.html'
 		})
+		.when('/:rxcui', {
+			controller: 'RxCUIDetails',
+			templateUrl: 'views/rxcuidetails.html'
+		})
 		.when('/tdetails/:tableName', {
 			controller: 'RxNormTableDetails',
 			templateUrl: 'views/rxnormtabledetails.html'

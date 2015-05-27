@@ -15,6 +15,9 @@ angular.module('RxNormReport')
 }).factory('existingAndProposedValues', function ($resource){
 	//console.log('factory DEEPAKDEEPAKDEEPAK');
 	return $resource('/api/scd/:cui1', {cui1 : '@cui1'});
+}).factory('readOnlyValues', function ($resource){
+	//console.log('factory DEEPAKDEEPAKDEEPAK');
+	return $resource('/api/scdreadonly/:cui7', {cui7 : '@cui7'});
 }).factory('Terms', function ($resource){
 	return $resource('/api/terms');
 }).factory('Comment', function ($resource){

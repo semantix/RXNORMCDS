@@ -1,0 +1,176 @@
+
+    <table ng-controller="RxCUIDetails">
+        <tr>
+            <td>
+                <table valign="top">
+                    <tr valign="top">
+                        <td width="50px"><b>RxCUI:</b></td>
+                        <td rowspan="2"><b><span id="scd_rxcui" style="color:blue"><u>{{rxcui}}</u></span></b></td>
+                        <td width="50px">&nbsp;&nbsp;<b>Status:</b>&nbsp;&nbsp;</td>
+                        <td rowspan="2"><b><span id="scd_rxcui" style="color:blue"><u>{{currentReviewStatus[0]['review_status']}}</u></span></b></td>
+                        <td width="50px">&nbsp;&nbsp;<b>Drug(SCD)&nbsp;:&nbsp;</b></td>
+                        <td style="word-wrap: break-word;" rowspan="2"><span id="scd_df" style="color:blue">{{existing[0]['SCD_str']}}</span></td>
+                    </tr>
+                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Exisitng&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:brown"><font size="2">{{getBreadcrumbs(-1, existing[0]['DF_str'])}}</font></span></h3>
+                    </div>
+                    <div class="panel-body">
+                        <table>
+                            <tr>
+                                <td width="10%">
+                                    <div role="alert"><b>RxNorm DF:&nbsp;</b></div>
+                                </td>
+                                <td width="25%">
+                                    <span style="color:blue">{{existing[0]['DF_str']}}</span>
+                                </td>
+                                <td width="15%">
+                                    <div role="alert"><b>RxTerms New DF:&nbsp;</b></div>
+                                </td>
+                                <td width="25%">
+                                    <span style="color:blue">{{existing[0]['NEWDF_rxt']}}</span>
+                                </td>
+                           
+                                <td width="15%">
+                                    <div role="alert"><b>RxTerms Route:&nbsp;</b></div>
+                                </td>
+                                <td width="10%">
+                                    <span style="color:blue">{{existing[0]['ROUTE_rxt']}}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Proposed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span class="label label-danger" ng-show="showConflict(existing[0]['conflict'])">Multiple proposed values.</span></h3>
+                                </div>
+                                <div class="panel-body">
+                                    <table>
+                                        <tr><td colspan="2"><h4><span class="label label-default">Dose Forms</span></h4></td></tr>
+                                        <tr>
+                                            <td>
+                                                <b>{{propertyList[0][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                <span style="color:blue">{{existing[0]['prop1']}}</span>
+                                            </td>
+                                            <td>
+                                                <b>&nbsp;&nbsp;{{propertyList[1][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                <span style="color:blue">{{existing[0]['prop3']}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[0][0]}}">{{getParticularComment(0)}}</span>
+                                            </td>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[1][0]}}">{{getParticularComment(1)}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="2">&nbsp;</td></tr>
+                                        <tr>
+                                            <td>
+                                                <b>{{propertyList[2][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                <span style="color:blue">{{existing[0]['prop2']}}</span>
+                                            </td>
+                                            <td>
+                                                <div role="alert">
+                                                    <b>&nbsp;&nbsp;{{propertyList[3][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                <span style="color:blue">{{existing[0]['prop4']}}</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[2][0]}}">{{getParticularComment(2)}}</span>
+                                            </td>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[3][0]}}">{{getParticularComment(3)}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="2"><h4><span class="label label-default">Administration</span></h4></td></tr>
+                                        <tr>
+                                            <td>
+                                                <b>{{propertyList[4][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                <span style="color:blue">{{existing[0]['prop5']}}</span>
+                                            </td>
+                                            <td>
+                                                <b>&nbsp;&nbsp;{{propertyList[5][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                <span style="color:blue">{{existing[0]['prop6']}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[4][0]}}">{{getParticularComment(4)}}</span>
+                                            </td>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[5][0]}}">{{getParticularComment(5)}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="2"><h4><span class="label label-default">Delivery Device</span></h4></td></tr>
+                                        <tr>
+                                            <td>
+                                                <b>{{propertyList[6][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                <span style="color:blue">{{existing[0]['prop7']}}</span>
+                                            </td>
+                                            <td>
+                                                <b>&nbsp;&nbsp;{{propertyList[9][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                    <span style="color:blue">{{existing[0]['prop9']}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[6][0]}}">{{getParticularComment(6)}}</span>
+                                            </td>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[9][0]}}">{{getParticularComment(9)}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="2">&nbsp;</td></tr>
+                                        <tr>
+                                            <td>
+                                                <b>{{propertyList[7][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                    <span style="color:blue">{{existing[0]['prop8']}}</span>
+                                            </td>
+                                            <td>
+                                                <b>&nbsp;&nbsp;{{propertyList[8][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                <span style="color:blue">{{existing[0]['prop10']}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[7][0]}}">{{getParticularComment(7)}}</span>
+                                            </td>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[8][0]}}">{{getParticularComment(8)}}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div> 
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                            Reviewer:&nbsp;&nbsp;<b>{{getReviewer()}}</b>
+                            <p>
+                            General Comments:&nbsp;&nbsp;<span style="color:red;display:block;width:1000px;word-break:break-all" id="NEW{{propertyList[10][0]}}">{{getParticularComment(10)}}</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>

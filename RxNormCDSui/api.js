@@ -384,6 +384,163 @@ router
         });
     });
 
+router
+    .param('cui7', function (req, res, next) {
+        //req.dbQuery = { id: parseInt(req.params.id, 10) };
+        next();
+    })
+    .route('/scdreadonly/:cui7')
+    .get(function (req, res, next) 
+    {
+        var cui = req.params.cui7;
+        var cond = '';
+        if (cui)
+            cond = ' where scd_df.SCD_rxcui = "' + cui + '" ';
+
+        var queryStr =  ' select scd_df.SCD_rxcui, scd_df.SCD_str, scd_df.DF_rxcui, scd_df.DF_str, ' +
+                '        scd_rxterms.ROUTE_rxt, scd_rxterms.NEWDF_rxt ' +
+                ' from scd_df ' +
+                ' left join scd_rxterms on ( scd_df.SCD_rxcui = scd_rxterms.SCD_rxcui ) ' +
+                cond ;
+
+        //console.log("Query for selected CUI:\n" + queryStr);
+        var query = connection1.query(queryStr  ,function (err, rows, fields) 
+        {
+            if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+            }
+
+    
+            var cond1 = 'false';
+            var cond2 = 'false';
+            var cond3 = 'false';
+            var proposedValues = [];
+    
+            if (rows[0])
+            {
+                /*
+                console.log("DF_str:" + (rows[0]['DF_str'])?rows[0]['DF_str']:"DF_str is not defined");
+                console.log("ROUTE_rxt:" + (rows[0]['ROUTE_rxt'])?rows[0]['ROUTE_rxt']:"ROUTE_rxt is not defined");
+                console.log("NEWDF_rxt:" + (rows[0]['NEWDF_rxt'])?rows[0]['NEWDF_rxt']:"NEWDF_rxt is not defined");
+                */
+
+                cond1 = ((rows[0]['DF_str'])&&(rows[0]['DF_str'].trim() != ''))?
+                    (' mappings.orig_term_source = "NDFRT" and mappings.orig_term_name = "' + rows[0]['DF_str'] + '"'):'false';
+
+                cond2 = ((rows[0]['ROUTE_rxt'])&&(rows[0]['ROUTE_rxt'].trim() != ''))?
+                    (' mappings.orig_term_source = "RxTerms" and mappings.orig_term_name = "' + rows[0]['ROUTE_rxt'] + '"'):'false';
+
+                cond3 = ((rows[0]['NEWDF_rxt'])&&(rows[0]['NEWDF_rxt'].trim() != ''))?
+                    (' mappings.orig_term_source = "RxTerms" and mappings.orig_term_name = "' + rows[0]['NEWDF_rxt'] + '"'):'false';
+    
+
+                var propQuery = ' select mappings.orig_term_name, mappings.orig_term_source, ' +
+                        ' proposed_attribs.id as prop_attrib_id, ' +
+                        ' proposed_attribs.category as prop_attrib_categ, ' +
+                        ' proposed_attribs.attribute as prop_attrib_attrib, ' +
+                        ' terms.id as prop_term_id, ' +
+                        ' terms.parent_id as prop_term_parent_id, ' +
+                        ' terms.name as prop_term_name ' +
+                    ' from mappings ' +
+                        ' join proposed_attribs ' +
+                            ' on ( mappings.proposed_attrib_id = proposed_attribs.id ) ' +
+                        ' join terms ' +
+                            ' on ( mappings.proposed_term_id = terms.id ) ' + 
+                    ' where ( ' + cond1 + ' )  or ( ' + cond2 + ' ) or ( ' + cond3 + ' ) ';
+
+                var innerQuery = connection1.query(propQuery  ,function (err2, rows2, fields2) 
+                {
+                        if(err2){
+                            console.log(err2);
+                            return next("Mysql error, check your query");
+                        }
+
+                    var propValues = [[0,''],
+                                    [1,''],
+                                    [2,''],
+                                    [3,''],
+                                    [4,''],
+                                    [5,''],
+                                    [6,''],
+                                    [7,''],
+                                    [8,''],
+                                    [9,'']];
+
+                    var updateWithConflict = false;
+                    proposedValues = [];
+                    for (var m=0; m < rows2.length;m++)
+                    {
+
+                        var conflict = false;
+                        var orig_term_name = rows2[m]['orig_term_name'];
+                        var orig_term_source = rows2[m]['orig_term_source'];
+                        var prop_attrib_id = rows2[m]['prop_attrib_id'];
+                        var prop_attrib_categ = rows2[m]['prop_attrib_categ'];
+                        var prop_attrib_attrib = rows2[m]['prop_attrib_attrib'];
+                        var prop_term_id = rows2[m]['prop_term_id'];
+                        var prop_term_parent_id = rows2[m]['prop_term_parent_id'];
+                        var prop_term_name = rows2[m]['prop_term_name'];
+
+                        var propValueIndex = parseInt(prop_attrib_id) - 1;
+
+                        if (propValues[propValueIndex][1] == '')
+                            propValues[propValueIndex][1] = prop_term_name;
+                        else
+                        {
+                            var prevValue = propValues[propValueIndex][1];
+
+                            //console.log ("Comparing " + prevValue + " with " + prop_term_name);
+                            if (prevValue != prop_term_name)
+                            {
+                                if (prevValue.indexOf(":::") != -1)
+                                {
+                                    var tokens = prevValue.split(":::");
+                                    for (var h = 0; h < tokens.length; h++)
+                                        if (tokens[h] != prop_term_name)
+                                        {
+                                            conflict = true;
+                                            updateWithConflict = true;
+                                        }
+                                }
+                                else
+                                {
+                                    conflict = true;
+                                    updateWithConflict = true;
+                                }
+                            }
+
+                            if (conflict)
+                            {
+                                propValues[propValueIndex][1] = 
+                                    propValues[propValueIndex][1] + ":::" + prop_term_name;
+                            }
+                        }
+
+                        //console.log("value at " + propValueIndex + " :" + propValues[propValueIndex][1]);
+                    };
+
+                    proposedValues.push({"prop1":propValues[0][1].replace(/:::/gi, ", "),
+                                        "prop2":propValues[1][1].replace(/:::/gi, ", "),
+                                        "prop3":propValues[2][1].replace(/:::/gi, ", "),
+                                        "prop4":propValues[3][1].replace(/:::/gi, ", "),
+                                        "prop5":propValues[4][1].replace(/:::/gi, ", "),
+                                        "prop6":propValues[5][1].replace(/:::/gi, ", "),
+                                        "prop7":propValues[6][1].replace(/:::/gi, ", "),
+                                        "prop8":propValues[7][1].replace(/:::/gi, ", "),
+                                        "prop9":propValues[8][1].replace(/:::/gi, ", "),
+                                        "prop10":propValues[9][1].replace(/:::/gi, ", "),
+                                        "conflict": conflict,
+                                        "DF_str": rows[0]['DF_str'],
+                                        "ROUTE_rxt": rows[0]['ROUTE_rxt'],
+                                        "NEWDF_rxt": rows[0]['NEWDF_rxt'],
+                                        "SCD_str": rows[0]['SCD_str']});
+
+                    res.json(proposedValues);
+                });
+            }
+       });
+    });
     router
     .param('cui1', function (req, res, next) {
         //req.dbQuery = { id: parseInt(req.params.id, 10) };
@@ -488,7 +645,7 @@ router
                 }
 
                 //connection1.end();
-                console.log(rows);
+                //console.log(rows);
                 res.json(rows);
              });
         })
@@ -540,7 +697,8 @@ router
 
         var statusQuery =   'select' +
                             ' scd_comments.SCD_rxcui, scd_df.SCD_str,scd_comments.SCD_property, ' +
-                            ' scd_comments.SCD_comment, scd_comments.SCD_reviewer ' +
+                            ' scd_comments.SCD_comment, scd_comments.SCD_reviewer, scd_comments.SCD_created,' +
+                            ' (select count(distinct SCD_rxcui) from scd_comments) as totalcuis' +
                             ' from scd_comments ' +
                             ' join scd_df ' +
                             ' on ( scd_comments.SCD_rxcui =scd_df.SCD_rxcui )';

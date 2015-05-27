@@ -474,13 +474,21 @@ angular.module('RxNormReport')
                     orderedData;
 
 			params.total(orderedData2.length); // length of data
+
+        	angular.forEach(data, function(item){
+        		$scope.totalcuis = item.totalcuis;
+        	});
+
             $defer.resolve(orderedData2.slice((params.page() - 1) * params.count(), params.page() * params.count()));         
         }
     });
 
-	// $scope.show = function (tName) {
-	// 	$location.url('/tdetails/' + tName);
-	// };
+	$scope.showDetails = function(event)
+	{
+		var currentCUI = event.target.innerHTML;
+
+		window.open("/" + currentCUI, "_blank");
+	};
 })
 .controller('RxNormTableDetails', function ($scope, $routeParams, MyTableDetails, $location) {
 		//console.log(' new controller DEEPAKDEEPAKDEEPAK ' + $routeParams.tableName);
@@ -503,5 +511,100 @@ angular.module('RxNormReport')
 
 	$scope.show = function (tName) {
 		$location.url('/tdetails/' + tName);
+	}; 	
+})
+.controller('RxCUIDetails', function ($scope, $routeParams, readOnlyValues, Comment, Terms, ReviewStatus, $location) {
+
+	$scope.rxcui = $routeParams.rxcui;
+
+	$scope.propertyList = [[0,'Dose Form: Drug Form'],
+							[1,'Dose Form: Release Pattern'],
+							[2,'Dose Form: Delivery Form'],
+							[3,'Dose Form: ER Time'],
+							[4,'Administration: Route (site)'],
+							[5,'Administration: Method'],
+							[6,'Delivery Device: Type'],
+							[7,'Delivery Device: Capacity'],
+							[8,'Delivery Device: ER Time'],
+							[9,'Delivery Device: Release Pattern'],
+							[10,'General Comments']];
+
+	$scope.commentList = [[0,''],
+							[1,''],
+							[2,''],
+							[3,''],
+							[4,''],
+							[5,''],
+							[6,''],
+							[7,''],
+							[8,''],
+							[9,''],
+							[10,'']];
+	
+	$scope.comments = Comment.query({cui: $scope.rxcui});
+	$scope.existing = [];
+	$scope.proposed = [];
+	$scope.terms = Terms.query();
+	$scope.currentReviewStatus = ReviewStatus.query({cui3: $scope.rxcui});
+	$scope.existing = readOnlyValues.query({cui7:$scope.rxcui});
+	$scope.reviewer = undefined;
+
+	$scope.getParticularComment = function (index)
+	{ 
+		for (var i=0; i < $scope.comments.length; i++)
+		{
+			
+			//console.log("matching=" + $scope.comments[i]['SCD_property']);
+			if ($scope.comments[i]['SCD_property'] == $scope.propertyList[index][1])
+				return $scope.comments[i]['SCD_comment'];
+		}
+
+		return "";
 	};
+
+	$scope.getReviewer = function (index)
+	{ 
+		$scope.reviewer = " ";
+
+		if ($scope.comments.length > 0)
+			$scope.reviewer = $scope.comments[0]['SCD_reviewer'];
+
+		return $scope.reviewer;
+	};
+
+	$scope.getBreadcrumbs = function(ind, termname)
+	{
+		var parentId = 0;
+		var term = '';
+
+		for (var i=0; i < $scope.terms.length; i++)
+		{
+			if (parseInt(ind) == -1)
+			{
+				if ($scope.terms[i]['name'] == termname)
+				{
+					parentId = $scope.terms[i]['parent_id'];
+					term = $scope.terms[i]['name'];
+				}
+			}
+			else
+			{
+				if ($scope.terms[i]['id'] == ind)
+				{
+					parentId = $scope.terms[i]['parent_id'];
+					term = $scope.terms[i]['name'];
+				}
+			}
+		}
+	
+		if (parseInt(parentId) == 0)
+			return term;
+		else
+			return $scope.getBreadcrumbs(parentId, term) + ' > ' + term;
+	};
+
+   	$scope.showConflict = function (bval)
+   	{
+   		return (bval == true);
+   	};
 });
