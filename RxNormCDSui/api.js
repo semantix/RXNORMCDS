@@ -122,7 +122,7 @@ router
     .route('/terms')
     .get(function (req, res, next) 
     {
-        var queryStr = ' select * from terms';
+        var queryStr = ' select * from terms where value_set_name = "RxNorm Dose Form"';
 
         var query = connection1.query(queryStr  ,function (err, rows, fields) 
         {
@@ -276,12 +276,12 @@ router
                                     [8,''],
                                     [9,'']];
 
+                    var conflict = false;
                     var updateWithConflict = false;
                     proposedValues = [];
                     for (var m=0; m < rows2.length;m++)
                     {
-
-                        var conflict = false;
+                        var duplicate = false;
                         var orig_term_name = rows2[m]['orig_term_name'];
                         var orig_term_source = rows2[m]['orig_term_source'];
                         var prop_attrib_id = rows2[m]['prop_attrib_id'];
@@ -291,18 +291,6 @@ router
                         var prop_term_parent_id = rows2[m]['prop_term_parent_id'];
                         var prop_term_name = rows2[m]['prop_term_name'];
                         
-                        /*
-                        console.log("Entry " + m + "\n");
-                        console.log("\torig_term_name:" + orig_term_name);
-                        console.log("\torig_term_source:" + orig_term_source);
-                        console.log("\tprop_attrib_id:" + prop_attrib_id);
-                        console.log("\tprop_attrib_categ:" + prop_attrib_categ);
-                        console.log("\tprop_attrib_attrib:" + prop_attrib_attrib);
-                        console.log("\tprop_term_id:" + prop_term_id);
-                        console.log("\tprop_term_parent_id:" + prop_term_parent_id);
-                        console.log("\tprop_term_name:" + prop_term_name);
-                        */
-
                         var propValueIndex = parseInt(prop_attrib_id) - 1;
 
                         if (propValues[propValueIndex][1] == '')
@@ -318,11 +306,15 @@ router
                                 {
                                     var tokens = prevValue.split(":::");
                                     for (var h = 0; h < tokens.length; h++)
+                                    {
                                         if (tokens[h] != prop_term_name)
                                         {
                                             conflict = true;
                                             updateWithConflict = true;
                                         }
+                                        else
+                                            duplicate = true;
+                                    }
                                 }
                                 else
                                 {
@@ -330,8 +322,10 @@ router
                                     updateWithConflict = true;
                                 }
                             }
+                            else
+                                duplicate = true;
 
-                            if (conflict)
+                            if (duplicate != true)
                             {
                                 propValues[propValueIndex][1] = 
                                     propValues[propValueIndex][1] + ":::" + prop_term_name;
@@ -467,12 +461,11 @@ router
                                     [8,''],
                                     [9,'']];
 
-                    var updateWithConflict = false;
+                    var conflict = false;
                     proposedValues = [];
                     for (var m=0; m < rows2.length;m++)
                     {
-
-                        var conflict = false;
+                        var duplicate = false;
                         var orig_term_name = rows2[m]['orig_term_name'];
                         var orig_term_source = rows2[m]['orig_term_source'];
                         var prop_attrib_id = rows2[m]['prop_attrib_id'];
@@ -493,24 +486,29 @@ router
                             //console.log ("Comparing " + prevValue + " with " + prop_term_name);
                             if (prevValue != prop_term_name)
                             {
+                                //console.log("found index");
                                 if (prevValue.indexOf(":::") != -1)
                                 {
                                     var tokens = prevValue.split(":::");
                                     for (var h = 0; h < tokens.length; h++)
+                                    {
                                         if (tokens[h] != prop_term_name)
                                         {
                                             conflict = true;
-                                            updateWithConflict = true;
                                         }
+                                        else
+                                            duplicate = true;
+                                    }
                                 }
                                 else
                                 {
                                     conflict = true;
-                                    updateWithConflict = true;
                                 }
                             }
+                            else
+                                duplicate = true;
 
-                            if (conflict)
+                            if (duplicate != true)
                             {
                                 propValues[propValueIndex][1] = 
                                     propValues[propValueIndex][1] + ":::" + prop_term_name;

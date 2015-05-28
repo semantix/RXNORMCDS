@@ -574,6 +574,7 @@ angular.module('RxNormReport')
 
 	$scope.getBreadcrumbs = function(ind, termname)
 	{
+		console.log ("Calling with ind=" + ind + " term= " + termname);
 		var parentId = 0;
 		var term = '';
 
@@ -585,6 +586,7 @@ angular.module('RxNormReport')
 				{
 					parentId = $scope.terms[i]['parent_id'];
 					term = $scope.terms[i]['name'];
+					console.log("Found term=" + termname + " parent = " + parentId) ;
 				}
 			}
 			else
@@ -593,6 +595,7 @@ angular.module('RxNormReport')
 				{
 					parentId = $scope.terms[i]['parent_id'];
 					term = $scope.terms[i]['name'];
+					console.log("Found term at " + ind + " = " + termname + " parent = " + parentId) ;
 				}
 			}
 		}
