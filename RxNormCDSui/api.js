@@ -274,7 +274,8 @@ router
                                     [6,''],
                                     [7,''],
                                     [8,''],
-                                    [9,'']];
+                                    [9,''],
+                                    [10,'']];
 
                     var conflict = false;
                     var updateWithConflict = false;
@@ -359,6 +360,7 @@ router
                                         "prop8":propValues[7][1].replace(/:::/gi, ", "),
                                         "prop9":propValues[8][1].replace(/:::/gi, ", "),
                                         "prop10":propValues[9][1].replace(/:::/gi, ", "),
+                                        "prop11":propValues[10][1].replace(/:::/gi, ", "),
                                         "conflict": conflict,
                                         "DF_str": rows[0]['DF_str'],
                                         "ROUTE_rxt": rows[0]['ROUTE_rxt'],
@@ -459,7 +461,8 @@ router
                                     [6,''],
                                     [7,''],
                                     [8,''],
-                                    [9,'']];
+                                    [9,''],
+                                    [10,'']];
 
                     var conflict = false;
                     proposedValues = [];
@@ -528,6 +531,7 @@ router
                                         "prop8":propValues[7][1].replace(/:::/gi, ", "),
                                         "prop9":propValues[8][1].replace(/:::/gi, ", "),
                                         "prop10":propValues[9][1].replace(/:::/gi, ", "),
+                                        "prop11":propValues[10][1].replace(/:::/gi, ", "),
                                         "conflict": conflict,
                                         "DF_str": rows[0]['DF_str'],
                                         "ROUTE_rxt": rows[0]['ROUTE_rxt'],

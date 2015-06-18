@@ -147,7 +147,7 @@
                                             </td>
                                             <td>
                                                 <b>&nbsp;&nbsp;{{propertyList[8][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
-                                                <span style="color:blue">{{existing[0]['prop10']}}</span>
+                                                <span style="color:blue">{{existing[0]['prop11']}}</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -156,6 +156,24 @@
                                             </td>
                                             <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
                                                 <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[8][0]}}">{{getParticularComment(8)}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="2"><h4><span class="label label-default">Other</span></h4></td></tr>
+                                        <tr>
+                                            <td>
+                                                <b>{{propertyList[10][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                <span style="color:blue">{{existing[0]['prop10']}}</span>
+                                            </td>
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
+                                                <span style="color:red;display:block;width:400px;word-break:break-all" id="NEW{{propertyList[10][0]}}">{{getParticularComment(10)}}</span>
+                                            </td>
+                                            <td aligh="left" valign="top">
+                                                &nbsp;
                                             </td>
                                         </tr>
                                     </table>
@@ -167,7 +185,7 @@
                         <td aligh="left" valign="top" style="padding:4px;border:solid 2px #060">
                             Reviewer:&nbsp;&nbsp;<b>{{getReviewer()}}</b>
                             <p>
-                            General Comments:&nbsp;&nbsp;<span style="color:red;display:block;width:1000px;word-break:break-all" id="NEW{{propertyList[10][0]}}">{{getParticularComment(10)}}</span>
+                            General Comments:&nbsp;&nbsp;<span style="color:red;display:block;width:1000px;word-break:break-all" id="NEW{{propertyList[11][0]}}">{{getParticularComment(11)}}</span>
                         </td>
                     </tr>
                 </table>

@@ -270,7 +270,7 @@
                                                             <td width="43%">
                                                                 <div role="alert">
                                                                 <b>&nbsp;&nbsp;{{propertyList[8][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
-                                                                <span style="color:blue">{{existing[0]['prop10']}}</span>
+                                                                <span style="color:blue">{{existing[0]['prop11']}}</span>
                                                                 </div>
                                                             </td>
                                                             <td width="5%">
@@ -280,7 +280,33 @@
                                                             <td width="2%" aligh="left">
                                                                 <span id="OK{{propertyList[8][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok'></span>
                                                                 <input id="NEW{{propertyList[8][0]}}" type="hidden" value="{{commentList[8][1]}}" ng-click="storeComment($event, cuis.entries[cuis.ind]['SCD_rxcui'])" />
+                                                                <input id="NEW{{propertyList[11][0]}}" type="hidden" value="{{commentList[11][1]}}" ng-click="storeComment($event, cuis.entries[cuis.ind]['SCD_rxcui'])"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr><td colspan="6"><h4><span class="label label-default">Other</span></h4></td></tr>
+                                                        <tr>
+                                                            <td width="43%">
+                                                                <div role="alert">
+                                                                    <b>{{propertyList[10][1].split(":")[1].trim()}}:</b>&nbsp;&nbsp;
+                                                                <span style="color:blue">{{existing[0]['prop10']}}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td width="5%">
+                                                                <span id="{{propertyList[10][1]}}" style ="color:{{getColor(10)}}" class='glyphicon glyphicon-stop'
+                                                                    onClick="setSelectedProperty(this.id, 10)"></span>
+                                                            </td>
+                                                            <td width="2%" aligh="left">
+                                                                <span id="OK{{propertyList[10][0]}}" style ="color:green;visibility:hidden" class='glyphicon glyphicon-ok'></span>
                                                                 <input id="NEW{{propertyList[10][0]}}" type="hidden" value="{{commentList[10][1]}}" ng-click="storeComment($event, cuis.entries[cuis.ind]['SCD_rxcui'])"/>
+                                                            </td>
+                                                            <td width="43%">
+                                                                &nbsp;
+                                                            </td>
+                                                            <td width="5%">
+                                                                &nbsp;
+                                                            </td>
+                                                            <td width="2%" aligh="left">
+                                                                &nbsp;
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -346,8 +372,8 @@
                                         <table>
                                             <tr>
                                                 <td colspan="2">
-                                                    <span id="{{propertyList[10][1]}}" style ="color:{{getColor(10)}}" class='glyphicon glyphicon-stop'
-                                                        onClick="setSelectedProperty(this.id, 10)" data-toggle='tooltip' title="Click here to select 'General Comments' option.">
+                                                    <span id="{{propertyList[11][1]}}" style ="color:{{getColor(11)}}" class='glyphicon glyphicon-stop'
+                                                        onClick="setSelectedProperty(this.id, 11)" data-toggle='tooltip' title="Click here to select 'General Comments' option.">
                                                     </span>
                                                     <label class="control-label" for="reviewers">&nbsp;&nbsp;Please add comments for:</label>
                                                 </td>

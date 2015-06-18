@@ -13,7 +13,8 @@ angular.module('RxNormReport')
 							[7,'Delivery Device: Capacity'],
 							[8,'Delivery Device: ER Time'],
 							[9,'Delivery Device: Release Pattern'],
-							[10,'General Comments']];
+							[10,'Other: Other'],
+							[11,'General Comments']];
 
 	$scope.commentList = [[0,''],
 							[1,''],
@@ -25,7 +26,8 @@ angular.module('RxNormReport')
 							[7,''],
 							[8,''],
 							[9,''],
-							[10,'']];
+							[10,''],
+							[11,'']];
 
 	$scope.allComments = [];
 
@@ -527,7 +529,8 @@ angular.module('RxNormReport')
 							[7,'Delivery Device: Capacity'],
 							[8,'Delivery Device: ER Time'],
 							[9,'Delivery Device: Release Pattern'],
-							[10,'General Comments']];
+							[10,'Other: Other'],
+							[11,'General Comments']];
 
 	$scope.commentList = [[0,''],
 							[1,''],
@@ -539,7 +542,8 @@ angular.module('RxNormReport')
 							[7,''],
 							[8,''],
 							[9,''],
-							[10,'']];
+							[10,''],
+							[11,'']];
 	
 	$scope.comments = Comment.query({cui: $scope.rxcui});
 	$scope.existing = [];
